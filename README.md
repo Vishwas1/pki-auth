@@ -43,3 +43,20 @@ It had three parts (note the `.` in the token acting as a sepatators):
 - In session based, for every request, a db call has to made inorder to validate the sessionid. whereas in jwt it is not required.
 - Multi server authorization can be easily implemented using jwt. Imagine there are two server (may be microservices) where you might want your user to get authenticated at one server and get the token and then use the same token to acess the second server without having him to re-authenticate for authorization (unlinke session based). 
 - For this all you need to do this is, share the `secretkey` with the other sever. Further public key cryprtograhy can also be used to sign and verify the message instead of shared `secretkey`.
+
+
+### Installation
+
+```js
+npm i
+npm run dev
+npm run build
+npm run test
+npm run start 
+```
+
+### APIs
+
+- `api/auth/register`
+- `api/auth/login`
+- `api/blog/created`: Protected with JSON web token
