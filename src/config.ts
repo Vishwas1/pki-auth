@@ -42,9 +42,11 @@ const did = {
     method : process.env.DID_METHOD_NAME || 'hypersign',
 }
 
+const jwtSecret = process.env.JWT_SECRET || 'secretKey'
 export  {
     port,
     logger,
     db,
-    did
+    did,
+    jwtSecret
 }

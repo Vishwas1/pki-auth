@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import { port, logger } from './config';
 import authRoutes from './routes/auth';
+import blogRoutes from './routes/blog';
 import path from 'path'
 
 const app: Application = express();
@@ -14,6 +15,7 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 
 app.use('/api/auth', authRoutes)
+app.use('/api/blog', blogRoutes)
 app.get('/', (req, res) => { res.sendFile(path.join(__dirname, '/index.html')) })
 
 app.listen(port, () => logger.info(`The server is running on port ${port}`));

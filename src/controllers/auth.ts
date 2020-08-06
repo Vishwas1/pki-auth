@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import { User } from '../services/user.service';
 import IUser  from '../models/IUser'
-import { logger } from '../config'
+import { logger, jwtSecret } from '../config'
+import jwt from 'jsonwebtoken';
 
 const check = (req: Request, res: Response) => {
     res.send('/api/auth api working!')
@@ -31,7 +32,17 @@ const login = async (req: Request, res: Response) => {
         const userindb: IUser = JSON.parse(userindbstr)
         
         if((userindb.username === username) && (userindb.password === password)){
-            res.status(200).send({ status: 200, message: "Sussfully loggedIn", error: null})
+            jwt.sign(
+                userindb, 
+                jwtSecret, 
+                { expiresIn: 30000 },
+                (err, token) => {
+                if(err) throw new Error(err)
+                res.status(200).send({ status: 200, message: {
+                    m: "Sussfully loggedIn",
+                    jwtToken: token
+                }, error: null})
+            })
         }else{
             throw new Error("Username or password mismatch");
         }        
