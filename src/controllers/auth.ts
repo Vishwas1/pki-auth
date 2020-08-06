@@ -35,13 +35,13 @@ const login = async (req: Request, res: Response) => {
             jwt.sign(
                 userindb, 
                 jwtSecret, 
-                { expiresIn: 30000 },
+                { expiresIn: '30s' },
                 (err, token) => {
-                if(err) throw new Error(err)
-                res.status(200).send({ status: 200, message: {
-                    m: "Sussfully loggedIn",
-                    jwtToken: token
-                }, error: null})
+                    if(err) throw new Error(err)
+                    res.status(200).send({ status: 200, message: {
+                        m: "Sussfully loggedIn",
+                        jwtToken: token
+                    }, error: null})
             })
         }else{
             throw new Error("Username or password mismatch");

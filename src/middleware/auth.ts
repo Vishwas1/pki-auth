@@ -1,4 +1,3 @@
-import auth from "../controllers/auth"
 import jwt from 'jsonwebtoken'
 import { jwtSecret } from '../config'
 
