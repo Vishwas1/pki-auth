@@ -19,7 +19,6 @@
 <template>
   <div class="home">
     <div class="col-md-4 centeralign">
-      
       <b-card no-body style="padding: 40px">
         <h2>Sign Up</h2>
         <hr>

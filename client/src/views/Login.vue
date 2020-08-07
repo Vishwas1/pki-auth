@@ -101,6 +101,8 @@ export default {
             // alert(`${j.message.m}`);
             localStorage.setItem('authToken', j.message.jwtToken)
             localStorage.setItem('user', JSON.stringify(j.message.user))
+            const usrStr = localStorage.getItem('user')
+            console.log(usrStr)
             if(localStorage.getItem('authToken') != null){
                 if(this.$route.params.nextUrl != null){
                     this.$router.push(this.$route.params.nextUrl)

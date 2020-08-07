@@ -20,7 +20,20 @@
 <template>
   <div class="home">
     <div class="col-md-8 centeralign">
-      <b-card no-body style="padding: 20px">
+    <div class="row">
+      <div class="col-md-6" >
+        <h3 style="float:left">Welcome {{user.username}}! </h3>
+      </div>
+      <div class="col-md-6" >
+        <button  style="float:right" type="button"
+                        data-toggle="modal"
+                        @click="logout()"
+                        class="btn btn-link">Logout</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <b-card no-body style="padding: 20px">
         <b-tabs content-class="mt-3">
           <b-tab title="Introduction" active>
             <Introduction/>
@@ -39,6 +52,10 @@
           </b-tab>
         </b-tabs>
       </b-card>
+      </div>
+    </div>
+      
+      
     </div>
   </div>
 </template>
@@ -51,6 +68,8 @@ import Introduction from "@/components/Introduction.vue";
 import ZKP from "@/components/zkp.vue";
 export default {
   name: "PanelPage",
+  mounted() {
+  },
   components: {
     Hash,
     Asymmetric,
@@ -60,13 +79,27 @@ export default {
   },
   data() {
     return {
-      active: 0
+      active: 0,
+      user: {}
     };
   },
-  created() {},
+  created() {
+    const usrStr = localStorage.getItem('user')
+    this.user = JSON.parse(usrStr);
+  },
   methods: {
     gotosubpage: id => {
       this.$router.push(`${id}`);
+    },
+    logout(){
+      localStorage.removeItem('authToken')
+      localStorage.removeItem('user')
+      
+      if(this.$route.params.nextUrl != null){
+                    this.$router.push(this.$route.params.nextUrl)
+                }else{
+        this.$router.push('login')
+                }
     }
   }
 };
