@@ -10,8 +10,11 @@ const check = (req: Request, res: Response) => {
 
 const register = async (req: Request, res: Response) => {
     try{
+        logger.info(req.body)
         const body:IUser = req.body
         const user = new User({...body})
+        const userindbstr  = await user.fetch()
+        if(userindbstr) throw new Error(`User ${user.publicKey} already exists`)
         const createdU = await user.create();
         res.status(200).send({ status: 200, message: createdU, error: null})
     }catch(e){
@@ -22,12 +25,12 @@ const register = async (req: Request, res: Response) => {
 const login = async (req: Request, res: Response) => {
     try{
         const { publicKey, password, username } = req.body;
-        if(!publicKey || !password || !username) throw new Error('PublicKey or password or username is empty');
+        if(!publicKey || !password || !username) throw new Error('PublicKey or password or username is empty')
         let x: IUser = { publicKey, password, username } as any;
         
         const user = new User(x)
         const userindbstr  = await user.fetch()
-        if(!userindbstr) throw new Error(`User ${publicKey} does not exist. Please register to login.`)
+        if(!userindbstr) throw new Error(`User ${publicKey} does not exist. Please register to login`)
 
         const userindb: IUser = JSON.parse(userindbstr)
         
@@ -40,11 +43,12 @@ const login = async (req: Request, res: Response) => {
                     if(err) throw new Error(err)
                     res.status(200).send({ status: 200, message: {
                         m: "Sussfully loggedIn",
-                        jwtToken: token
+                        jwtToken: token,
+                        user: userindb
                     }, error: null})
             })
         }else{
-            throw new Error("Username or password mismatch");
+            throw new Error("Username or password mismatch")
         }        
     }catch(e){
         res.status(500).send({ status: 500, message: null, error: e.message})
