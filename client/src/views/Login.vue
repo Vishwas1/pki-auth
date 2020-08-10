@@ -29,9 +29,6 @@
                     Username: <input type="text" class="form-control" v-model="username">
                 </div>
                 <div class="form-group">
-                    Publickey: <input type="text" class="form-control" v-model="publicKey">
-                </div>
-                <div class="form-group">
                     Password: <input type="password" class="form-control" v-model="password">
                 </div>
             </form>
@@ -71,9 +68,8 @@ export default {
   data() {
     return {
       active: 0,
-      username: "Amit",
-      password:"Amit",
-      publicKey: "ak_nKiJUyQToMDCcAYx9Z52vyHCg5bXnGpovjAxfs3kp9XUHaagn",
+      username: "",
+      password:"",
       host: location.hostname
     };
   },
@@ -85,8 +81,7 @@ export default {
     login(){
         const userData = {
             username: this.username,
-            password: this.password,
-            publicKey: this.publicKey
+            password: this.password
         }
         const url = `http://${this.host}:5000/api/auth/login`;
         fetch(url, {
@@ -99,11 +94,9 @@ export default {
             if(j && j.status == 500){
               return alert(`Error:  ${j.error}`);
             }
-            // alert(`${j.message.m}`);
             localStorage.setItem('authToken', j.message.jwtToken)
             localStorage.setItem('user', JSON.stringify(j.message.user))
             const usrStr = localStorage.getItem('user')
-            console.log(usrStr)
             if(localStorage.getItem('authToken') != null){
                 if(this.$route.params.nextUrl != null){
                     this.$router.push(this.$route.params.nextUrl)

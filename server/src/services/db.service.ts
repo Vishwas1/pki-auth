@@ -15,10 +15,10 @@ export class DBService{
     dropTable (type: schemaType): Promise<string>{
         return new Promise((resolve, reject)=>{
             if(type === schemaType.USER){
-                logger.info('Method: createTable: Before dropTable User table: query = ', DROP_USER_TABLE);
+                logger.debug('Method: createTable: Before dropTable User table: query = ', DROP_USER_TABLE);
                 db.run(DROP_USER_TABLE,(err, res) =>{
                     if(err) reject('ERROR')
-                    logger.info('Method: createTable: After dropTable User table res = ', res)
+                    logger.debug('Method: createTable: After dropTable User table res = ', res)
                     return resolve("SUCCESS")
                 })
             }
@@ -28,10 +28,10 @@ export class DBService{
     createTable (type: schemaType): Promise<string>{
         return new Promise((resolve, reject)=> {
             if(type === schemaType.USER){
-                logger.info('Method: dropTable: Before dropping User table: query = ', CREATE_USER_TABLE);
+                logger.debug('Method: dropTable: Before dropping User table: query = ', CREATE_USER_TABLE);
                 db.run(CREATE_USER_TABLE, (err, res) => {
                     if(err) reject("ERROR")
-                    logger.info('Method: dropTable: After dropping User table res = ', res);
+                    logger.debug('Method: dropTable: After dropping User table res = ', res);
                     resolve("SUCCESS")
                 })
             }
@@ -42,13 +42,13 @@ export class DBService{
     add(type: schemaType, obj: any): Promise<any>{
         return new Promise((resolve, reject)=> {
             if(type === schemaType.USER){
-                logger.info('Method: Add: schema type is USER')
+                logger.debug('Method: Add: schema type is USER')
                 const fields: IUser = <IUser> obj;
-                logger.info('Method: Add: Before inserting the data');
+                logger.debug('Method: Add: Before inserting the data');
                 db.run(ADD_USER, [fields.fname, fields.lname, fields.phoneNumber, fields.username, fields.password ,fields.email, fields.publicKey, fields.privateKey], (err, res) => {
                     if(err) reject(err)
                     this.getOne(schemaType.USER, { publicKey: fields.publicKey }).then((res: IUser)=> {
-                        logger.info('Method: Add: After inserting the data, newRecordId = ', res.id);
+                        logger.debug('Method: Add: After inserting the data, newRecordId = ', res.id);
                         resolve(res)
                     })
                 })
@@ -63,14 +63,14 @@ export class DBService{
     delete(type: schemaType, params):Promise<any>{
         return new Promise((resolve, reject) => {
             if(type === schemaType.USER){
-                logger.info('Method: delete: schema type is USER')
+                logger.debug('Method: delete: schema type is USER')
                 const cols = Object.keys(params);
                 let query = `DELETE FROM User WHERE `;
                 cols.forEach((v, i)=> {
                     query = query + ' ' + v + ' = ? AND';
                 })
                 query = query.substring(0, query.lastIndexOf('AND'))
-                logger.info('Before delete the user query = ', query)
+                logger.debug('Before delete the user query = ', query)
                 const values = Object.keys(params).map(k => params[k])
                 db.run(query, values, (err, row: IUser) => {
                     if (err) return reject(err)
