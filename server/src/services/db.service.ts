@@ -45,7 +45,9 @@ export class DBService{
                 logger.debug('Method: Add: schema type is USER')
                 const fields: IUser = <IUser> obj;
                 logger.debug('Method: Add: Before inserting the data');
-                db.run(ADD_USER, [fields.fname, fields.lname, fields.phoneNumber, fields.username, fields.password ,fields.email, fields.publicKey, fields.privateKey], (err, res) => {
+                db.run(ADD_USER, [fields.fname, fields.lname, fields.phoneNumber, fields.username, 
+                    fields.password ,fields.email, fields.publicKey, fields.privateKey, 
+                    fields.hash, fields.birthdate, fields.jobTitle], (err, res) => {
                     if(err) reject(err)
                     this.getOne(schemaType.USER, { publicKey: fields.publicKey }).then((res: IUser)=> {
                         logger.debug('Method: Add: After inserting the data, newRecordId = ', res.id);

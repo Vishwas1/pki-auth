@@ -11,8 +11,10 @@ export class User implements IUser{
     publicKey: string;
     privateKey: string;
     dbSerice: DBService;
-    
-    constructor({ fname = "", lname = "", username, phoneNumber = "", password, email = "", publicKey, privateKey = ""}: IUser){
+    hash: string;
+    birthdate: string;
+    jobTitle: string
+    constructor({ fname = "", lname = "", username ="", phoneNumber = "", password ="", email = "", publicKey, privateKey = "", hash ="", birthdate ="", jobTitle=""}: IUser){
         this.id = ""; // new uuid
         this.fname = fname;
         this.lname = lname;
@@ -22,6 +24,9 @@ export class User implements IUser{
         this.email = email;
         this.publicKey = publicKey;
         this.privateKey = privateKey;
+        this.hash = hash;
+        this.birthdate = birthdate;
+        this.jobTitle = jobTitle;
         this.dbSerice = new DBService();
     }
 
@@ -35,7 +40,7 @@ export class User implements IUser{
     }
 
     async fetch(){
-        const user:IUser = await this.dbSerice.getOne(schemaType.USER, {username: this.username, password: this.password});
+        const user:IUser = await this.dbSerice.getOne(schemaType.USER, {username: this.username, password: this.password, publicKey: this.publicKey});
         return this.toString(user)
     }
 }

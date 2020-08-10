@@ -123,6 +123,7 @@
 <script>
 import fetch from "node-fetch";
 import { getUserDoc, getCredential } from "lds-sdk";
+const {hash} = require("../crypto-lib/asymmetric");
 export default {
   name: "Register",
   components: {},
@@ -179,16 +180,18 @@ export default {
       try {
         if(this.credentials == "" || this.credentials === "") throw new Error("Click on 'Generate Document' button to first generate crypto credentials")
 
+        const creds = JSON.parse(this.credentials);
         const userData = {
           id: "",
-          fname: this.fullName,
-          lname: this.fullName,
-          phoneNumber: this.telephone,
-          username: this.username,
-          password: this.password,
-          email: this.email,
-          publicKey: this.publicKey,
-          privateKey: this.publicKey,
+          fname: "",
+          lname: "",
+          phoneNumber: "",
+          username: "",
+          password: "",
+          email: "",
+          publicKey: creds.keys.publicKey.publicKeyBase58,
+          privateKey: creds.keys.publicKey.publicKeyBase58,
+          hash: hash(this.userData)
         };
         const url = `http://${this.host}:5000/api/auth/register`;
         fetch(url, {
