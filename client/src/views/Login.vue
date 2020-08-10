@@ -62,8 +62,11 @@
         <div class="row">
           <form action="#" class="col-md-12">
             <div class="form-group">
-              <qrcode-vue :value="QRCodeValue" :size="size" level="H"></qrcode-vue>
+              <qrcode-vue :value="QRCodeValue" :size="200" level="H"></qrcode-vue>
+              <label>Scan this QR code to authenticate!</label>
             </div>
+            <hr />
+            <h2>Or</h2>
             <div class="form-group">
               <label class="floatLeft">Upload User Doc:</label>
               <input
@@ -133,7 +136,20 @@ export default {
       proof: "",
     };
   },
-  created() {},
+  created(){
+    const url = `http://${this.host}:5000/api/auth/challenge`;
+    fetch(url)
+    .then(res => res.json())
+    .then(json => {
+      if(json.status == 200){
+        this.challenge = json.message
+      }
+    })
+    .catch(e => alert(`Error: ${e.message}`))
+  },
+  mounted(){
+
+  },
   methods: {
     gotosubpage: (id) => {
       this.$router.push(`${id}`);
