@@ -90,7 +90,7 @@
             </div>
             <div class="col-md-6 floatRight">
               Do not have account?
-              <a href="/register">SignUp</a>
+              <a href="/register_pki">SignUp</a>
             </div>
           </div>
         </b-card>
@@ -105,6 +105,9 @@ import Asymmetric from "@/components/Asymmetric.vue";
 import Symmetric from "@/components/Symmetric.vue";
 import Introduction from "@/components/Introduction.vue";
 import ZKP from "@/components/zkp.vue";
+import { getChallange } from 'lds-sdk'
+
+
 export default {
   name: "Login",
   components: {
@@ -145,7 +148,7 @@ export default {
           }
           localStorage.setItem("authToken", j.message.jwtToken);
           localStorage.setItem("user", JSON.stringify(j.message.user));
-          const usrStr = localStorage.getItem("user");
+          // const usrStr = localStorage.getItem("user");
           if (localStorage.getItem("authToken") != null) {
             if (this.$route.params.nextUrl != null) {
               this.$router.push(this.$route.params.nextUrl);

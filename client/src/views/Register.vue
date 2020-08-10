@@ -15,6 +15,12 @@
 .fullbody {
   width: 100%;
 }
+.floatLeft {
+  float: left;
+}
+.floatRight {
+  float: right;
+}
 </style>
 <template>
   <div class="home">

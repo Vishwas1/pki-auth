@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts",
-    "newdb" : "nodemon src/app.ts newdb",
+    "newdb": "nodemon src/app.ts newdb",
     "build": "tsc -p .",
     "test": "mocha -r ts-node/register src/tests/**/*.test.ts"
   },
@@ -19,6 +19,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+    "lds-sdk": "^2.0.0",
     "simple-node-logger": "^18.12.24",
     "sqlite3": "^5.0.0",
     "uuid": "^8.2.0"

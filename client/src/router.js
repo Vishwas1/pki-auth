@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from './views/Login.vue'
 import Register from './views/Register.vue'
+import Register_PKI from './views/Register_pki.vue'
 import Customers from './views/Customers.vue'
 import CustomerDetails from './views/CustomerDetails.vue'
 import Crypto from './views/Crypto.vue'
@@ -25,6 +26,11 @@ const router =  new Router({
       path: '/register',
       name: 'register',
       component: Register
+    },
+    {
+      path: '/register_pki',
+      name: 'register_pki',
+      component: Register_PKI
     },
     {
       path: '/customers',
