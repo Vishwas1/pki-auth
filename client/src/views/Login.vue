@@ -24,98 +24,100 @@
 </style>
 <template>
   <!-- <div class="home"> -->
-    <div class="row">
-      <div class="col-md-4" style="margin-left: 17%;">
-        <b-card no-body style="padding: 40px">
-          <h2>Basic Authentication</h2>
-          <hr />
-          <div class="row">
-            <form action="#" class="col-md-12">
-              <div class="form-group">
-                <input type="text" class="form-control" v-model="username" placeholder="Username" />
-              </div>
-              <div class="form-group">
-                <input
-                  type="password"
-                  class="form-control"
-                  v-model="password"
-                  placeholder="Password"
-                />
-              </div>
-            </form>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <button
-                type="button"
-                data-toggle="modal"
-                @click="login()"
-                class="btn btn-primary floatLeft"
-              >Login</button>
+  <div class="row">
+    <div class="col-md-4" style="margin-left: 17%;">
+      <b-card no-body style="padding: 40px">
+        <h2>Basic Authentication</h2>
+        <hr />
+        <div class="row">
+          <form action="#" class="col-md-12">
+            <div class="form-group">
+              <input type="text" class="form-control" v-model="username" placeholder="Username" />
             </div>
-            <div class="col-md-6 floatRight">
-              Do not have account?
-              <a href="/register">SignUp</a>
+            <div class="form-group">
+              <input type="password" class="form-control" v-model="password" placeholder="Password" />
             </div>
+          </form>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <button
+              type="button"
+              data-toggle="modal"
+              @click="login()"
+              class="btn btn-primary floatLeft"
+            >Login</button>
           </div>
-        </b-card>
-      </div>
-      <div class="col-md-4">
-        <b-card no-body style="padding: 40px">
-          <h2>PKI Authentication</h2>
-          <hr />
-          <div class="row">
-            <form action="#" class="col-md-12">
-              <div class="form-group">
-                <input type="text" class="form-control" v-model="publicKey" placeholder="PublicKey" />
-              </div>
-              <div class="form-group">
-                <input
-                  type="password"
-                  class="form-control"
-                  v-model="privateKey"
-                  placeholder="PrivateKey"
-                />
-              </div>
-            </form>
+          <div class="col-md-6 floatRight">
+            Do not have account?
+            <a href="/register">SignUp</a>
           </div>
-          <div class="row">
-            <div class="col-md-6">
-              <button
-                type="button"
-                data-toggle="modal"
-                @click="login()"
-                class="btn btn-primary floatLeft"
-              >Login</button>
-            </div>
-            <div class="col-md-6 floatRight">
-              Do not have account?
-              <a href="/register_pki">SignUp</a>
-            </div>
-          </div>
-        </b-card>
-      </div>
+        </div>
+      </b-card>
     </div>
+    <div class="col-md-4">
+      <b-card no-body style="padding: 40px">
+        <h2>PKI Authentication</h2>
+        <hr />
+        <div class="row">
+          <form action="#" class="col-md-12">
+            <div class="form-group">
+              <qrcode-vue :value="QRCodeValue" :size="size" level="H"></qrcode-vue>
+            </div>
+            <div class="form-group">
+              <label class="floatLeft">Upload User Doc:</label>
+              <input
+                type="file"
+                class="form-control"
+                placeholder
+                @change="onFileChange"
+                accept="*.json"
+              />
+            </div>
+            <div class="form-group">
+              <label class="floatLeft">Upload Credentials:</label>
+              <input type="file" class="form-control" placeholder @change="onFileChange" />
+            </div>
+          </form>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <button
+              type="button"
+              data-toggle="modal"
+              @click="downloadProof()"
+              class="btn btn-primary floatLeft"
+            >View Proof</button>
+          </div>
+          <div class="col-md-3">
+            <button
+              type="button"
+              data-toggle="modal"
+              @click="login('PKI')"
+              class="btn btn-primary floatLeft"
+            >Login</button>
+          </div>
+          <div class="col-md-6 floatRight">
+            Do not have account?
+            <a href="/register_pki">SignUp</a>
+          </div>
+        </div>
+      </b-card>
+    </div>
+  </div>
   <!-- </div> -->
 </template>
 
 <script>
-import Hash from "@/components/Hash.vue";
-import Asymmetric from "@/components/Asymmetric.vue";
-import Symmetric from "@/components/Symmetric.vue";
-import Introduction from "@/components/Introduction.vue";
-import ZKP from "@/components/zkp.vue";
-import { getChallange } from 'lds-sdk'
-
+import { getChallange } from "lds-sdk";
+import QrcodeVue from "qrcode.vue";
+import { sign } from "lds-sdk";
+const { hash } = require("../crypto-lib/asymmetric");
 
 export default {
   name: "Login",
   components: {
-    Hash,
-    Asymmetric,
-    Symmetric,
-    Introduction,
-    ZKP,
+    QrcodeVue,
   },
   data() {
     return {
@@ -123,6 +125,12 @@ export default {
       username: "",
       password: "",
       host: location.hostname,
+      challenge: "dddd",
+      domain: location.host,
+      QRCodeValue: location.host,
+      credentials: {},
+      userData: {},
+      proof: "",
     };
   },
   created() {},
@@ -130,12 +138,74 @@ export default {
     gotosubpage: (id) => {
       this.$router.push(`${id}`);
     },
-    login() {
+    async generateProof() {
+      this.credentials = JSON.parse(localStorage.getItem("credentials"));
+      this.userData = JSON.parse(localStorage.getItem("userData"));
+
+      if (this.credentials != {} && this.userData != {}) {
+        const p = await sign({
+          doc: this.userData,
+          privateKeyBase58: this.credentials.keys.privateKeyBase58,
+          publicKey: this.credentials.keys.publicKey,
+          challenge: this.challenge,
+          domain: this.domain,
+        });
+        this.proof = JSON.stringify(p);
+      } else {
+        throw new Error("Both files are needed for generating proof");
+      }
+    },
+    forceFileDownload(data, fileName) {
+      const url = window.URL.createObjectURL(new Blob([data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+    },
+    async downloadProof() {
+      await this.generateProof();
+      this.forceFileDownload(this.proof, "proof.json");
+    },
+    onFileChange(event) {
+      try {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = readSuccess;
+        function readSuccess(evt) {
+          const fileJSON = JSON.parse(evt.target.result);
+          if (!fileJSON) throw new Error("Incorrect file");
+          if (fileJSON["controller"]) {
+            localStorage.setItem("credentials", JSON.stringify(fileJSON));
+          } else if (fileJSON["@context"]) {
+            localStorage.setItem("userData", JSON.stringify(fileJSON));
+          } else {
+            throw new Error("Incorrect file");
+          }
+        }
+        reader.readAsText(file);
+      } catch (e) {
+        alert(`Error: ${e.message}`);
+      }
+    },
+    async login(type) {
+      let url = "";
+      if (type === "PKI") {
+        url = `http://${this.host}:5000/api/auth/login?type=PKI`;
+        await this.generateProof();
+      } else {
+        url = `http://${this.host}:5000/api/auth/login`;
+      }
       const userData = {
         username: this.username,
         password: this.password,
+        proof: this.proof,
+        controller: this.credentials.controller,
+        publicKey: this.credentials.keys.publicKey,
+        challenge: this.challenge,
+        domain: this.domain,
       };
-      const url = `http://${this.host}:5000/api/auth/login`;
+      
       fetch(url, {
         body: JSON.stringify(userData),
         method: "POST",
@@ -148,6 +218,7 @@ export default {
           }
           localStorage.setItem("authToken", j.message.jwtToken);
           localStorage.setItem("user", JSON.stringify(j.message.user));
+          console.log(j.message.user);
           // const usrStr = localStorage.getItem("user");
           if (localStorage.getItem("authToken") != null) {
             if (this.$route.params.nextUrl != null) {

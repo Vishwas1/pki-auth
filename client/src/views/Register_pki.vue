@@ -123,7 +123,7 @@
 <script>
 import fetch from "node-fetch";
 import { getUserDoc, getCredential } from "lds-sdk";
-const {hash} = require("../crypto-lib/asymmetric");
+const {sha256hashStr} = require("../crypto-lib/symmetric");
 export default {
   name: "Register",
   components: {},
@@ -191,7 +191,7 @@ export default {
           email: "",
           publicKey: creds.keys.publicKey.publicKeyBase58,
           privateKey: creds.keys.publicKey.publicKeyBase58,
-          hash: hash(this.userData)
+          hash: sha256hashStr(this.userData)
         };
         const url = `http://${this.host}:5000/api/auth/register`;
         fetch(url, {

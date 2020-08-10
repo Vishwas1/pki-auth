@@ -40,7 +40,7 @@ export class User implements IUser{
     }
 
     async fetch(){
-        const user:IUser = await this.dbSerice.getOne(schemaType.USER, {username: this.username, password: this.password, publicKey: this.publicKey});
+        let user:IUser = await this.dbSerice.getOne(schemaType.USER, {username: this.username, password: this.password, publicKey: this.publicKey});
         return this.toString(user)
     }
 }
