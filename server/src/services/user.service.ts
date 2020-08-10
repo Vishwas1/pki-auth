@@ -39,8 +39,14 @@ export class User implements IUser{
         return this.toString(newUser)
     }
 
-    async fetch(){
-        let user:IUser = await this.dbSerice.getOne(schemaType.USER, {username: this.username, password: this.password, publicKey: this.publicKey});
+    async fetch(ifPki = true){
+        let obj= {}
+        if(ifPki){
+            obj = {username: this.username, password: this.password, publicKey: this.publicKey}
+        }else{
+            obj = {username: this.username, password: this.password}
+        }
+        let user:IUser = await this.dbSerice.getOne(schemaType.USER, obj);
         return this.toString(user)
     }
 }

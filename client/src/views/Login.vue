@@ -44,7 +44,7 @@
             <button
               type="button"
               data-toggle="modal"
-              @click="login()"
+              @click="login('BASIC')"
               class="btn btn-primary floatLeft"
             >Login</button>
           </div>
@@ -205,6 +205,8 @@ export default {
       }
     },
     async login(type) {
+      debugger
+      console.log(type)
       let url = "";
       if (type === "PKI") {
         url = `http://${this.host}:5000/api/auth/login?type=PKI`;
@@ -216,9 +218,9 @@ export default {
         username: this.username,
         password: this.password,
         proof: this.proof,
-        controller: this.credentials.controller,
-        publicKey: this.credentials.keys.publicKey,
-        challenge: this.challenge,
+        controller: this.credentials ? this.credentials.controller: {},
+        publicKey: this.credentials && this.credentials.keys ? this.credentials.keys.publicKey: {},
+        challenge: this.challenge? this.challenge: "",
         domain: this.domain,
       };
       

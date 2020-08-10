@@ -33,12 +33,15 @@ const login = async (req: Request, res: Response) => {
         let userData: IUser = {} as any;
         let { username, password, proof, controller, publicKey, challenge, domain } = req.body;
         
+        console.log(loginType)
         // Basic authenticatoin
         if(!loginType){
             if(!password || !username) throw new Error('PublicKey or password or username is empty')
             x = { password, username } as any;
             const userObj = new User(x)
-            const userindbstr  = await userObj.fetch()
+            console.log(userObj)
+            const userindbstr  = await userObj.fetch(false)
+            console.log(userindbstr)
             if(!userindbstr) throw new Error(`Invalid user. Please register to login`)
             userInDb = JSON.parse(userindbstr)
             if((userInDb.username != username) && (userInDb.password != password)) throw new Error("Unauthorized: Username or password mismatch")
