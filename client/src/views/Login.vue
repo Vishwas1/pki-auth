@@ -73,7 +73,8 @@ export default {
       active: 0,
       username: "Amit",
       password:"Amit",
-      publicKey: "ak_nKiJUyQToMDCcAYx9Z52vyHCg5bXnGpovjAxfs3kp9XUHaagn"
+      publicKey: "ak_nKiJUyQToMDCcAYx9Z52vyHCg5bXnGpovjAxfs3kp9XUHaagn",
+      host: location.hostname
     };
   },
   created() {},
@@ -87,7 +88,7 @@ export default {
             password: this.password,
             publicKey: this.publicKey
         }
-        const url = "http://localhost:5000/api/auth/login";
+        const url = `http://${this.host}:5000/api/auth/login`;
         fetch(url, {
           body: JSON.stringify(userData),
           method: "POST",

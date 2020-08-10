@@ -84,7 +84,8 @@ export default {
       phno: "8323210123",
       publicKey: "ak_h7Hw9UD9JUPUtyZ54Es2BhFFiBo22aD2k615LtHshxpZ68dqJ",
       username: "Amit",
-      password: "Amit"
+      password: "Amit",
+      host: location.hostname
     };
   },
   created() {},
@@ -105,7 +106,7 @@ export default {
           publicKey: this.publicKey,
           privateKey: this.publicKey
         };
-        const url = "http://localhost:5000/api/auth/register";
+        const url = `http://${this.host}:5000/api/auth/register`;
         fetch(url, {
           body: JSON.stringify(userData),
           method: "POST",
