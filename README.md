@@ -49,6 +49,7 @@ It had three parts (note the `.` in the token acting as a sepatators):
 
 ```js
 npm i
+npm run newdb // to setup database. Do not run this everytime. 
 npm run dev
 npm run build
 npm run test
