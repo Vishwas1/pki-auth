@@ -10,7 +10,7 @@ const check = (req: Request, res: Response) => {
 
 const register = async (req: Request, res: Response) => {
     try{
-        logger.info(req.body)
+        logger.debug(req.body)
         const body:IUser = req.body
         const user = new User({...body})
         const userindbstr  = await user.fetch()
@@ -56,7 +56,7 @@ const login = async (req: Request, res: Response) => {
 }
 
 const recover = (req: Request, res: Response) => {
-    logger.info('Recover ap called')
+    logger.debug('Recover ap called')
     res.send('Recover ap called!')
 }
 

@@ -59,4 +59,5 @@ npm run start
 
 - `api/auth/register`
 - `api/auth/login`
+- `api/auth/verify` : Verifies the authToken passed in header for client
 - `api/blog/created`: Protected with JSON web token
