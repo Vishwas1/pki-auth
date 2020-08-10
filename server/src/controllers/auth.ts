@@ -24,13 +24,13 @@ const register = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
     try{
-        const { publicKey, password, username } = req.body;
-        if(!publicKey || !password || !username) throw new Error('PublicKey or password or username is empty')
-        let x: IUser = { publicKey, password, username } as any;
+        const {password, username } = req.body;
+        if(!password || !username) throw new Error('PublicKey or password or username is empty')
+        let x: IUser = { password, username } as any;
         
         const user = new User(x)
         const userindbstr  = await user.fetch()
-        if(!userindbstr) throw new Error(`User ${publicKey} does not exist. Please register to login`)
+        if(!userindbstr) throw new Error(`User ${username} does not exist. Please register to login`)
 
         const userindb: IUser = JSON.parse(userindbstr)
         

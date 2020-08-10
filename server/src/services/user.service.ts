@@ -35,7 +35,7 @@ export class User implements IUser{
     }
 
     async fetch(){
-        const user:IUser = await this.dbSerice.getOne(schemaType.USER, {publicKey: this.publicKey});
+        const user:IUser = await this.dbSerice.getOne(schemaType.USER, {username: this.username, password: this.password});
         return this.toString(user)
     }
 }
