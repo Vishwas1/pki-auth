@@ -48,7 +48,7 @@ For authorization it is uses [`JWT - Json web Token`](docs/jwt-concept.md) in bo
 
 #### Proof
 
-![db](docs/PKI-proof.png)
+![db](docs/PKI-proof_.png)
 
 ## Installation & Usage
 
