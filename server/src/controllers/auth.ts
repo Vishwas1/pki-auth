@@ -13,9 +13,9 @@ const check = (req: Request, res: Response) => {
 const register = async (req: Request, res: Response) => {
     try{
         logger.debug(req.body)
-        const body:IUser = req.body
+        const body:IUser = req.body        
         const user = new User({...body})
-        if(user.publicKey == "") throw new Error("PublicKey field can not be null")
+        // if(user.publicKey == "") throw new Error("PublicKey field can not be null")
         const userindbstr  = await user.fetch()
         if(userindbstr) throw new Error(`User ${user.publicKey} already exists`)
         const createdU = await user.create();

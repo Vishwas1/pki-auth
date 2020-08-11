@@ -116,7 +116,7 @@ import { getChallange } from "lds-sdk";
 import QrcodeVue from "qrcode.vue";
 import { sign } from "lds-sdk";
 const { hash } = require("../crypto-lib/asymmetric");
-
+const {sha256hashStr} = require("../crypto-lib/symmetric");
 export default {
   name: "Login",
   components: {
@@ -216,7 +216,7 @@ export default {
       }
       const userData = {
         username: this.username,
-        password: this.password,
+        password: this.password != "" ? sha256hashStr(this.password): this.password,
         proof: this.proof,
         controller: this.credentials ? this.credentials.controller: {},
         publicKey: this.credentials && this.credentials.keys ? this.credentials.keys.publicKey: {},

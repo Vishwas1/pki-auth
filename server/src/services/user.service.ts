@@ -43,6 +43,7 @@ export class User implements IUser{
         let obj= {}
         if(ifPki){
             obj = {username: this.username, password: this.password, publicKey: this.publicKey}
+            console.log(obj)
         }else{
             obj = {username: this.username, password: this.password}
         }

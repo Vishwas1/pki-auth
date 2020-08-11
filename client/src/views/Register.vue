@@ -43,8 +43,8 @@
               <input type="text" class="form-control" v-model="phno" />
             </div>
             <div class="form-group">
-              Public Key:
-              <input type="text" class="form-control" v-model="publicKey" />
+              <!-- Public Key: -->
+              <input type="text" class="form-control" v-model="publicKey" hidden/>
             </div>
             <div class="form-group">
               Username:
@@ -77,6 +77,7 @@
 
 <script>
 import fetch from "node-fetch";
+const {sha256hashStr} = require("../crypto-lib/symmetric");
 export default {
   name: "Register",
   components: {
@@ -88,7 +89,7 @@ export default {
       fullName: "Amit Kumar",
       email: "amit@gmail.com",
       phno: "8323210123",
-      publicKey: "ak_h7Hw9UD9JUPUtyZ54Es2BhFFiBo22aD2k615LtHshxpZ68dqJ",
+      publicKey: "",
       username: "Amit",
       password: "Amit",
       host: location.hostname
@@ -107,7 +108,7 @@ export default {
           lname: this.fullName,
           phoneNumber: this.phno,
           username: this.username,
-          password: this.password,
+          password: sha256hashStr(this.password),
           email: this.email,
           publicKey: this.publicKey,
           privateKey: this.publicKey

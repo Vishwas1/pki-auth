@@ -15,10 +15,10 @@ export class DBService{
     dropTable (type: schemaType): Promise<string>{
         return new Promise((resolve, reject)=>{
             if(type === schemaType.USER){
-                logger.debug('Method: createTable: Before dropTable User table: query = ', DROP_USER_TABLE);
+                logger.debug('Method: dropTable: Before dropTable User table: query = ', DROP_USER_TABLE);
                 db.run(DROP_USER_TABLE,(err, res) =>{
                     if(err) reject('ERROR')
-                    logger.debug('Method: createTable: After dropTable User table res = ', res)
+                    logger.debug('Method: dropTable: After dropTable User table res = ', res)
                     return resolve("SUCCESS")
                 })
             }
@@ -26,12 +26,17 @@ export class DBService{
     }
     
     createTable (type: schemaType): Promise<string>{
+        console.log('Inside createTable')
         return new Promise((resolve, reject)=> {
             if(type === schemaType.USER){
-                logger.debug('Method: dropTable: Before dropping User table: query = ', CREATE_USER_TABLE);
+                console.log('Inside createTable, schema user')
+                logger.debug('Method: createTable: Before dropping User table: query = ', CREATE_USER_TABLE);
                 db.run(CREATE_USER_TABLE, (err, res) => {
-                    if(err) reject("ERROR")
-                    logger.debug('Method: dropTable: After dropping User table res = ', res);
+                    if(err) {
+                        console.log(err)
+                        reject(err)
+                    }
+                    logger.debug('Method: createTable: After dropping User table res = ', res);
                     resolve("SUCCESS")
                 })
             }
@@ -46,7 +51,7 @@ export class DBService{
                 const fields: IUser = <IUser> obj;
                 logger.debug('Method: Add: Before inserting the data');
                 db.run(ADD_USER, [fields.fname, fields.lname, fields.phoneNumber, fields.username, 
-                    fields.password ,fields.email, fields.publicKey, fields.privateKey, 
+                    fields.password ,fields.email, fields.publicKey, 
                     fields.hash, fields.birthdate, fields.jobTitle], (err, res) => {
                     if(err) reject(err)
                     this.getOne(schemaType.USER, { publicKey: fields.publicKey }).then((res: IUser)=> {
