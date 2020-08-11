@@ -1,4 +1,4 @@
-# Authentication Playground
+# A Password less authentication protocol using PKI and Linked Data Signature
 
 The tool supports two types of authentications; BASIC-AUTH (username/password based) and PKI-AUTH (passwordless). The goal of this experiment is to compare between these two type of authentication mechanisms and to prove the following:
 
