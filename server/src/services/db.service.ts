@@ -26,14 +26,11 @@ export class DBService{
     }
     
     createTable (type: schemaType): Promise<string>{
-        console.log('Inside createTable')
         return new Promise((resolve, reject)=> {
-            if(type === schemaType.USER){
-                console.log('Inside createTable, schema user')
+            if(type === schemaType.USER){                
                 logger.debug('Method: createTable: Before dropping User table: query = ', CREATE_USER_TABLE);
                 db.run(CREATE_USER_TABLE, (err, res) => {
                     if(err) {
-                        console.log(err)
                         reject(err)
                     }
                     logger.debug('Method: createTable: After dropping User table res = ', res);

@@ -1,12 +1,20 @@
-# A Password less authentication protocol using PKI and Linked Data Signature
+# A Password less authentication protocol using PKI and Linked Data Signature to protect user data
 
 The tool supports two types of authentications; BASIC-AUTH (username/password based) and PKI-AUTH (passwordless). The goal of this experiment is to compare between these two type of authentication mechanisms and to prove the following:
 
+### Goal
+
 > How passworldless solution can be implemented using Public Key Infrastructue and become better alternative of password based authentications. 
 
-> How PKI based solution can protect the User's data by not letting the server store the user's personal information but still be able to use the application as they were using earlier. 
+> How PKI based solution can protect the User's data by not letting the server store the user's personal information but still be able to use the application the way it was being used earlier. 
 
 For authorization it is uses [`JWT - Json web Token`](docs/jwt-concept.md) in both the cases.
+
+### Evaluation Metrics
+
+* Trust
+* Data Protection
+* Usability
 
 ## Basic Authentication
 

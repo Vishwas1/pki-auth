@@ -86,7 +86,6 @@ export default {
   created() {
     const usrStr = localStorage.getItem('user')
     this.user = JSON.parse(usrStr);
-    console.log(this.user)
   },
   methods: {
     gotosubpage: id => {
@@ -95,6 +94,8 @@ export default {
     logout(){
       localStorage.removeItem('authToken')
       localStorage.removeItem('user')
+      localStorage.removeItem("credentials")
+      localStorage.removeItem("userData")
       
       if(this.$route.params.nextUrl != null){
                     this.$router.push(this.$route.params.nextUrl)

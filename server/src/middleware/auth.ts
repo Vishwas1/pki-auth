@@ -4,9 +4,9 @@ import { jwtSecret } from '../config'
 export default function verifyAuth(req, res, next){
     const authToken = req.headers['x-auth-token']
     if(authToken) {
-        jwt.verify(authToken, jwtSecret, (err, userdata) => {
+        jwt.verify(authToken, jwtSecret, (err, data) => {
             if(err) res.status(403).send({ status: 403, message: "Unauthorized.", error: null })
-            res.locals.user = userdata;
+            res.locals.data = data;
             next()
         })
     }else{

@@ -8,7 +8,7 @@ router.post('/create', verifyAuth , (req, res) => {
         status: 200,
         message: { 
             m: "The blog post got created..",
-            user: res.locals.user
+            user: res.locals.data
         },
         error: null
     })

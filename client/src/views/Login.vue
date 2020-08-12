@@ -115,7 +115,6 @@
 import { getChallange } from "lds-sdk";
 import QrcodeVue from "qrcode.vue";
 import { sign } from "lds-sdk";
-const { hash } = require("../crypto-lib/asymmetric");
 const {sha256hashStr} = require("../crypto-lib/symmetric");
 export default {
   name: "Login",
@@ -157,13 +156,13 @@ export default {
     async generateProof() {
       this.credentials = JSON.parse(localStorage.getItem("credentials"));
       this.userData = JSON.parse(localStorage.getItem("userData"));
-
-      if (this.credentials != {} && this.userData != {}) {
+      console.log(this.challenge)
+      if((this.credentials && this.credentials['controller']) != null && (this.userData != null &&  this.userData['@context']) ){
         const p = await sign({
           doc: this.userData,
           privateKeyBase58: this.credentials.keys.privateKeyBase58,
           publicKey: this.credentials.keys.publicKey,
-          challenge: this.challenge,
+          challenge: this.challenge.challenge,
           domain: this.domain,
         });
         this.proof = JSON.stringify(p);
@@ -205,11 +204,14 @@ export default {
       }
     },
     async login(type) {
-      debugger
-      console.log(type)
+     try{
       let url = "";
+      let headers = {
+        "Content-Type": "application/json"
+      }
       if (type === "PKI") {
-        url = `http://${this.host}:5000/api/auth/login?type=PKI`;
+        url = `http://${this.host}:5000/api/auth/login_pki?type=PKI`;
+        headers['x-auth-token'] = this.challenge.JWTChallenge;
         await this.generateProof();
       } else {
         url = `http://${this.host}:5000/api/auth/login`;
@@ -220,14 +222,14 @@ export default {
         proof: this.proof,
         controller: this.credentials ? this.credentials.controller: {},
         publicKey: this.credentials && this.credentials.keys ? this.credentials.keys.publicKey: {},
-        challenge: this.challenge? this.challenge: "",
+        challenge: this.challenge? this.challenge.challenge: "",
         domain: this.domain,
       };
       
       fetch(url, {
         body: JSON.stringify(userData),
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: headers,
       })
         .then((res) => res.json())
         .then((j) => {
@@ -236,8 +238,6 @@ export default {
           }
           localStorage.setItem("authToken", j.message.jwtToken);
           localStorage.setItem("user", JSON.stringify(j.message.user));
-          console.log(j.message.user);
-          // const usrStr = localStorage.getItem("user");
           if (localStorage.getItem("authToken") != null) {
             if (this.$route.params.nextUrl != null) {
               this.$router.push(this.$route.params.nextUrl);
@@ -246,6 +246,10 @@ export default {
             }
           }
         });
+     }catch(e){
+       alert(`Error: ${e.message}`)
+     }
+      
     },
   },
 };

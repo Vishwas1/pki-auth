@@ -27,21 +27,20 @@ const register = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
     try{
+        const challengeExtractedFromChToken = res.locals.data? res.locals.data.challenge : "";
+        console.log(challengeExtractedFromChToken)
         const loginType = req.query.type;
         let x: IUser = {} as any;
         let userInDb: IUser = {} as any;
         let userData: IUser = {} as any;
-        let { username, password, proof, controller, publicKey, challenge, domain } = req.body;
-        
-        console.log(loginType)
+        let { username, password, proof, controller, challenge, publicKey, domain } = req.body;
+
         // Basic authenticatoin
         if(!loginType){
             if(!password || !username) throw new Error('PublicKey or password or username is empty')
             x = { password, username } as any;
             const userObj = new User(x)
-            console.log(userObj)
             const userindbstr  = await userObj.fetch(false)
-            console.log(userindbstr)
             if(!userindbstr) throw new Error(`Invalid user. Please register to login`)
             userInDb = JSON.parse(userindbstr)
             if((userInDb.username != username) && (userInDb.password != password)) throw new Error("Unauthorized: Username or password mismatch")
@@ -50,11 +49,14 @@ const login = async (req: Request, res: Response) => {
         
         // PKI Authentcatoin: Verify the signature
         if(loginType == 'PKI'){
-            console.log({proof, controller, publicKey})
-            if(!proof || !controller || !publicKey || !challenge || !domain) throw new Error('proof, controller, publicKey, challenge, domain is empty')
+            
+            if(!proof || !controller || !publicKey  || !domain) throw new Error('proof, controller, publicKey, challenge, domain is empty')
             proof = JSON.parse(proof)
-            const res = await verify({doc: proof, publicKey: publicKey, challenge, domain, controller: controller })
+            logger.debug(`Before verifying the proof, ch = ${challengeExtractedFromChToken}`)
+            const res = await verify({doc: proof, publicKey: publicKey, challenge: challengeExtractedFromChToken, domain, controller: controller })
+            logger.debug(`After verifying the proof, res = ${JSON.stringify(res)}`)
             if(res.verified == true){
+                logger.debug('Proof verified')
                 delete proof['proof']
                 const userObj = new User({...proof,fname: proof.name, publicKey: publicKey.publicKeyBase58})    
                 const userindbstr  = await userObj.fetch()
@@ -64,6 +66,7 @@ const login = async (req: Request, res: Response) => {
                 if(generatedHash != userInDb.hash) throw new Error("Unauthorized: User's hash did not match.")
                 userData = proof
             }else{
+                logger.debug('Proof could not verified')
                 throw new Error("Unauthorized: Proof can not be verified!")
             }
         }
@@ -92,7 +95,19 @@ const recover = (req: Request, res: Response) => {
 }
 
 const getNewChallenge = (req: Request, res: Response) => {
-    res.status(200).send({ status: 200, message: getChallange() });
+    const challenge = getChallange();
+    jwt.sign(
+        {challenge}, 
+        jwtSecret, 
+        { expiresIn: '30s' },
+        (err, token) => {
+            if(err) throw new Error(err)
+            res.status(200).send({ status: 200, message: {
+                JWTChallenge: token,
+                challenge}, error: null})
+
+    })  
+    // res.status(200).send({ status: 200, message: getChallange() });
 }
 
 export default {
