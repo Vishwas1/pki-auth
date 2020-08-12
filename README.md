@@ -8,6 +8,10 @@ A Password less authentication protocol built using PKI and Linked Data Signatur
 
 The protocol uses Linked Data Signature and JSON Web Token as its core concepts along with JSON-ld as message format. 
 
+## Related Work
+
+FIDO is trying to solve the very same problem. But FIDO is complex to understand and implement for a normal devleoper. More over it involved costs of certification and all. Here, our goal is to come up with a very light weight sdk so that developers can implement PKI efficiently and securely. 
+
 ## Protocol
 
 ### Registration
