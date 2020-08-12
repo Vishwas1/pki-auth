@@ -38,7 +38,7 @@ For authorization it is uses [`JWT - Json web Token`](docs/jwt-concept.md) in bo
 
 ## Demo 
 
-Follow the [instructions](#installatio-&-usage) to run the `client` and `server` applications. First setup and run the server then run the client. Once it runs successfully, the client app can be accessed on `http://localhost:8080/` url. The tool supports two types of authentications; BASIC-AUTH (username/password based) and PKI-AUTH (passwordless).
+Follow the [instructions](#installation-&-usage) to run the `client` and `server` applications. First setup and run the server then run the client. Once it runs successfully, the client app can be accessed on `http://localhost:8080/` url. The tool supports two types of authentications; BASIC-AUTH (username/password based) and PKI-AUTH (passwordless).
 
 ### Basic Authentication
 
