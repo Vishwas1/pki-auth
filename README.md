@@ -1,6 +1,6 @@
 # PKI-Auth
 
-A Password less authentication protocol built using PKI and Linked Data Signature to securely authenticate and protect user data. The protocol accomplishes the following two goals:
+A Password less authentication protocol built using PKI and Linked Data Signature to securely authenticate users into websites and protect their data. The protocol accomplishes the following two goals:
 
 > How passworldless solution can be implemented using Public Key Infrastructue and become better alternative of password based authentications. 
 
