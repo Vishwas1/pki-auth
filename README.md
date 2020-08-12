@@ -10,12 +10,6 @@ The goal of this experiment is to compare between these two type of authenticati
 
 For authorization it is uses [`JWT - Json web Token`](docs/jwt-concept.md) in both the cases.
 
-### Evaluation Metrics
-
-* Trust
-* Data Protection
-* Usability
-
 ## Protocol
 
 ### Registration
@@ -35,6 +29,16 @@ For authorization it is uses [`JWT - Json web Token`](docs/jwt-concept.md) in bo
 ![reg](docs/PKI-seq-autho.svg)
 
 - [Source](https://sequencediagram.org/index.html#initialData=C4S2BsFMAIAUGkCSBaAggVQCoAkBc1UBXYACwHsAnEALwENQyA7AKGYAdaLQBjEDx4NG7gQkAe048+tAdADOkCgDdFrRmWAwyKikJFjg+AML7ZAc0jA50AFIB1TNCbcY4MmYsATRC2GiByAB8CsqKuABKkACOhJBygmwUGpDcmp6RcmSEFC4AOozYkLSeinL4ANoA5AAeyLTEJMjAZADWYpX49pgAuszqmk468oo6uACMAHTQAKLVwBS0qdA1dQ1Nre3QJEUlFPkATFMAaoogAGYAnrYOANzQOucXABRdADTQAFYA7sAAyikUSwASmYISGyCCfgM+FQ4DcX2sixccjkrCAA)
+
+
+### Evaluation Metrics
+
+* Trust
+* Data Protection
+* Usability
+* Security
+
+![comp](docs/comparision.png)
 
 ## Demo 
 
