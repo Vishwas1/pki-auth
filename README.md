@@ -1,14 +1,12 @@
-# A Password less authentication protocol using PKI and Linked Data Signature to protect user data
+# PKI-Auth
 
-The goal of this experiment is to compare between these two type of authentication mechanisms and to prove the following:
-
-### Goal
+A Password less authentication protocol built using PKI and Linked Data Signature to protect user data. The protocol accomplishes the following two goals:
 
 > How passworldless solution can be implemented using Public Key Infrastructue and become better alternative of password based authentications. 
 
 > How PKI based solution can protect the User's data by not letting the server store the user's personal information but still be able to use the application the way it was being used earlier. 
 
-For authorization it is uses [`JWT - Json web Token`](docs/jwt-concept.md) in both the cases.
+The protocol uses Linked Data Signature and JSON Web Token as its core concepts along with JSON-ld as message format. 
 
 ## Protocol
 
