@@ -156,7 +156,6 @@ export default {
     async generateProof() {
       this.credentials = JSON.parse(localStorage.getItem("credentials"));
       this.userData = JSON.parse(localStorage.getItem("userData"));
-      console.log(this.challenge)
       if((this.credentials && this.credentials['controller']) != null && (this.userData != null &&  this.userData['@context']) ){
         const p = await sign({
           doc: this.userData,
