@@ -1,6 +1,6 @@
 # A Password less authentication protocol using PKI and Linked Data Signature to protect user data
 
-The tool supports two types of authentications; BASIC-AUTH (username/password based) and PKI-AUTH (passwordless). The goal of this experiment is to compare between these two type of authentication mechanisms and to prove the following:
+The goal of this experiment is to compare between these two type of authentication mechanisms and to prove the following:
 
 ### Goal
 
@@ -38,6 +38,8 @@ For authorization it is uses [`JWT - Json web Token`](docs/jwt-concept.md) in bo
 
 ## Demo 
 
+Follow the [instructions](#installatio-&-usage) to run the `client` and `server` applications. First setup and run the server then run the client. Once it runs successfully, the client app can be accessed on `http://localhost:8080/` url. The tool supports two types of authentications; BASIC-AUTH (username/password based) and PKI-AUTH (passwordless).
+
 ### Basic Authentication
 
 #### Registration & Login
@@ -46,29 +48,45 @@ Registration | Login
 ------------ | ------
 ![reg](docs/basic-signup.png) | ![db](docs/basic-Login.png)
 
+Register a use by filling the registration form and then go to login page to login into the website. On successfull login, the user is taken into `home` page which show user profile. 
+
 #### Inside Database
+
+Let us take a look into database when registered by this mechanism. 
 
 ![db](docs/baisc-db.png)
 
+As you can clearly see user personal information sitting in the database. 
+
 ### PKI Authentication
+
+Now, go back to the login page [http://localhost:8080/login] but this time lets use `PKI-Auth`. But before that, lets register a user. 
 
 #### Registration
 
+To register a user go to register page [http://localhost:8080/register_pki] and fill the form.
+
 ![db](docs/PKI-reg.png)
 
-
 ##### User Doc & Crypto Material [JSON-ld]
+
+Once the form is filled, you can download crypto materials (`credential.json`) and user doc (`userDoc.json`). Note that you are not yet signedup. 
 
 User doc | Credential doc
 ---------|---------------
 ![db](docs/PKI-userdoc.png) | ![db](docs/PKI-Crypto-material.png)
 
+To signup, press on **SignUp** button. If you are redirected back to login page, meaning, you are signedup. Let's take a look at the db again.
 
 #### Inside Database
 
 ![db](docs/PKI-db.png)
 
+As you can see in the db (the second row), none of user personal information went into it. Only the `publickey` and `hash` of userData resides - Quite safe huh!
+
 #### Login
+
+To login using `PKI-auth`, you either need a wallet to scan the QR code or, just provide crypto material doc and userDoc. You can click on **View Proof** button to see (optional) what signature got added to the userDoc. Finally click on **Login** button to go to user profile page.
 
 Login | Proof
 ------|-------
