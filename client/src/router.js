@@ -6,6 +6,7 @@ import Register_PKI from './views/Register_pki.vue'
 import Customers from './views/Customers.vue'
 import CustomerDetails from './views/CustomerDetails.vue'
 import Crypto from './views/Crypto.vue'
+import Home from './views/Home.vue'
 import fetch from 'node-fetch'
 
 Vue.use(Router)
@@ -45,7 +46,7 @@ const router =  new Router({
     {
       path: '/crypto',
       name: 'crypto',
-      component: Crypto,
+      component: Home,
       meta: {
         requiresAuth: true
       } 
