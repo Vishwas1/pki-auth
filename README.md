@@ -125,34 +125,20 @@ Login | Proof
     * On the other hand, user has to install multiple user-agents to manage the same userdata but different crypto-materials for different website. It is good for the security since every website will have different keypairs but very bad design for usability. 
 * Overall, usability is the main challenge to solve here. 
 
+## Next Step
+
+* Now that we undestood the problem with the protocol, we need to come up with a solution where user register only for one time (like in case of social login) and other website just need to support that login. In this way, user will only have one wallet and one time login.
+* However, we have to make sure that user uses different credentials for different websites (unlike facebook where one credetials is being used everywhere)
+
 ## Installation & Usage
 
-### Client
+* [Client](client/README.md)
+* [Server](server/README.md)
 
-```js
-cd client
-npm i
-npm run serve
-```
+## Disclaimer and Issues
 
-### Server
+* This work is **NOT** ready for production yet. So please use this work only for understanding purpose. 
+* Any other suggestion related to attack vectors or any other bugs in code, please create a issue for that. Thank You!
 
-```js
-cd server
-npm i
-mv .env.sample .env // rename remove .sample from  .env.sample
-npm run newdb // to setup database. Do not run this everytime. 
-npm run dev
-npm run build
-npm run test
-npm run start 
-```
 
-## APIs
-
-- `api/auth/register`: To register a user
-- `api/auth/login`: Tp authenticate a user
-- `api/auth/verify`: Verifies the authToken passed in header for client
-- `api/auth/challenge`: To get a new challenge
-- `api/blog/created`: Protected with JSON web token
 
