@@ -137,7 +137,7 @@ Login | Proof
 
 ## Next Step
 
-* Now that we undestood the problem with the protocol, we need to come up with a solution where user register only for one time (like in case of social login) and other website just need to support that login. In this way, user will only have one wallet and one time login.
+* Now that we undestood the problem with the protocol, we need to come up with a solution where user register only for one time (like in case of social login) and other website just need to support that login. In this way, user will only have one wallet and one time registration.
 * However, we have to make sure that user uses different credentials for different websites (unlike facebook where one credetials is being used everywhere)
 
 ## Installation & Usage
