@@ -46,13 +46,27 @@ FIDO is trying to solve the very same problem. But FIDO is complex to understand
 
 // TODO
 
-## Problems
+## Problems with Basic-Auth
+
+* Store user sensitive information in the server database which can be prone to hack.
+* Passwords on their own do not constitute sufficient security for many activities.
+* Passwords can be shared. 
+* MFA brings the complexity and does not really solve the sharing problem. 
+* Passwords needs to be changed frequently.
+* Increase in password complexity can bring user hinderance. 
+
+> My father sent me facebook request for the 7th time the previous month. ha ha! 
+
+> Is security is not for all kind of user?
+
+## Problems with PKI-Auth
 
 * For website
     * Every website would need their user to register with them, as well as they need to provide some user-agent for storing credentials and user doc to their user. 
     * As compared to basic-auth, the pki-auth is still complex for a website to implement and it has security concerns. So the developer must have to be aware of attack vectors and proper cryptographic premitives.
 * For user
-    * On the other hand, user has to install multiple user-agents to manage the same userdata but different crypto-materials for different website. It is good for the security since every website will have different keypairs but very bad design for a usability.  
+    * On the other hand, user has to install multiple user-agents to manage the same userdata but different crypto-materials for different website. It is good for the security since every website will have different keypairs but very bad design for usability. 
+* Overall, usability is the main challenge to solve here.  
 
 ## Demo 
 
