@@ -152,5 +152,6 @@ npm run start
 - `api/auth/register`: To register a user
 - `api/auth/login`: Tp authenticate a user
 - `api/auth/verify`: Verifies the authToken passed in header for client
+- `api/auth/challenge`: To get a new challenge
 - `api/blog/created`: Protected with JSON web token
-- `api/blog/challenge`: To get a new challenge
+
