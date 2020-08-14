@@ -42,6 +42,18 @@ FIDO is trying to solve the very same problem. But FIDO is complex to understand
 
 ![comp](docs/comparision.png)
 
+## Attack Vectors
+
+// TODO
+
+## Problems
+
+* For website
+    * Every website would need their user to register with them, as well as they need to provide some user-agent for storing credentials and user doc to their user. 
+    * As compared to basic-auth, the pki-auth is still complex for a website to implement and it has security concerns. So the developer must have to be aware of attack vectors and proper cryptographic premitives.
+* For user
+    * On the other hand, user has to install multiple user-agents to manage the same userdata but different crypto-materials for different website. It is good for the security since every website will have different keypairs but very bad design for a usability.  
+
 ## Demo 
 
 Follow the [instructions](#installation--usage) to run the `client` and `server` applications. First setup and run the server then run the client. Once it runs successfully, the client app can be accessed on `http://localhost:8080/` url. The tool supports two types of authentications; BASIC-AUTH (username/password based) and PKI-AUTH (passwordless).
