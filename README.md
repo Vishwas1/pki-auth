@@ -113,6 +113,7 @@ npm run serve
 ```js
 cd server
 npm i
+mv .env.sample .env // rename remove .sample from  .env.sample
 npm run newdb // to setup database. Do not run this everytime. 
 npm run dev
 npm run build
