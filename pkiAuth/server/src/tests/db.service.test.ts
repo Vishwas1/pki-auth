@@ -45,9 +45,12 @@ describe('DBService', () => {
         const userInDb = await newUser.create()
         console.log(userInDb)
 
-        const newApp =  new Application();
+        const newApp =  new Application({appId: "hello", appSecret: "hi", name: "newApp001"});
         const appInDb  =  await newApp.create()
         console.log(appInDb)
+        const old =  await newApp.fetch();
+        console.log(old)
+        
         
         // expect(userInDb.publicKey).equal(newUser.publicKey)
     })

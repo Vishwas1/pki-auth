@@ -22,6 +22,7 @@ const check = (req: Request, res: Response) => {
     res.redirect(`http://localhost:8080/login${query}`)
 }
 
+
 const register = async (req: Request, res: Response) => {
     try{
         logger.debug(req.body)
@@ -40,7 +41,6 @@ const register = async (req: Request, res: Response) => {
 const login = async (req: Request, res: Response) => {
     try{
         const challengeExtractedFromChToken = res.locals.data? res.locals.data.challenge : "";
-        console.log(challengeExtractedFromChToken)
         const loginType = req.query.type;
         let x: IUser = {} as any;
         let userInDb: IUser = {} as any;

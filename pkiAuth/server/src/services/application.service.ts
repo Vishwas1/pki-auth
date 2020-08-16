@@ -6,12 +6,14 @@ export class Application implements IApplication{
     appId: string;
     appSecret: string;
     isActive: string;
+    name: string;
     dbSerice: DBService;
-    constructor(){
-        this.appId = getChallange(); // new uuid
+    constructor({ appId = " ", appSecret = " ", name = " "}){
+        this.appId = appId == " " ? getChallange(): appId; // new uuid
         this.id = this.appId;
-        this.appSecret = getChallange();
+        this.appSecret = appSecret == " "?getChallange(): appSecret;
         this.isActive = "true";
+        this.name = name;
         this.dbSerice = new DBService();
     }
 

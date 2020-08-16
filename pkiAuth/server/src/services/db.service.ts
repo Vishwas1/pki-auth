@@ -6,7 +6,7 @@ import { db, logger } from '../config'
 
 const FieldMap = Object.freeze({
     User: ["id","fname","lname","phoneNumber","username","password","email","publicKey","privateKey","hash","birthdate","jobTitle"],
-    Application: ["id","appId","appSecret","isActive"]
+    Application: ["id","appId","appSecret","isActive", "name"]
 })
 
 export enum SchemaType {
