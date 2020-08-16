@@ -50,3 +50,50 @@ end
 
 
 
+======================
+
+title PKI-AUTH: Authentication
+
+participant userAgent
+participant client
+
+participant authServer
+participant appServer
+
+parallel Pre-requisite
+abox over authServer,userAgent#cyan:UserAgent is registered with AuthServer\nand has **Profile Keypair**:\n{profilePubk, profilePrivK}
+abox over authServer,appServer#yellow:AppServer is registered with \nAuthServer and was issued:\n{appId, appSecret}
+parallel off
+
+note over client: user press "login" button on the webpage
+client ->appServer: /auth/login
+group Challenge & Scanning QR
+appServer->authServer:Requests Challenge.\nParam: {appId, appSecret}
+note over authServer: Check if this App is registered.
+note over authServer:1. Generated a challenge = uuid()\n2. <color:#blue>JWTChallenge = jwt_sign({appId,challenge}, jwtSecret)</color>
+authServer --> appServer:Response Challenge\nParams: {JWTChallenge, challenge}
+end
+
+appServer -->client: QR code data, Login page
+note over client:SDK shows the QR code on the loginpage.
+client -->userAgent:User scans the QR code.\nParams: { JWTChallenge, challenge, redirectUrl} 
+
+
+group Signature generation and verification
+note over userAgent:<color:#blue>signedDoc = sign(userDoc, profilePrivK,\nprofilePubk,challenge, domain)</color>
+userAgent ->authServer:Login Request;\nParams: {SignedDoc: {userData, proof},\profilePubk, challenge, redirectUrl}\nHeaders: ['x-auth-token': JWTChallenge]
+note over authServer:1. Extract 'x-auth-token' header\n2.<color:#blue>{challenge, appId}= jwt_verify(JWTChallenge, jwtSecret)</color>\n2. Check if appId exists. 
+note over authServer:1. Checks if the profilePubK exists in db otherwise reject.\n2. Verify the attached proof; \n  <color:#blue>verify(SignedDoc, profilePubK,domain, challenge)</color>\n3. Extract the **userData** from signedDoc\n4. Generate **sha3(userData)**\n5. Checks if the hash in db == generated hash
+authServer -->userAgent: Respose Ok.
+end
+
+group Redirection
+authServer ->appServer:Forwards login request using redirectUrl\nParams: {userData, profilePubK}
+note over appServer: 1. Checks if profilePubK exists in db?\n2. If not, Generate **sha3(userData)**\n   store into db. otherwise go next step
+note over appServer:Generates authorization\n<color:#blue>JWT = jwt_sign(userData, jwtSecret)</color>
+appServer -->authServer: Response Ok.
+appServer -->client: Login response; Params: {JWT, userData}
+end
+
+
+

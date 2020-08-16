@@ -129,7 +129,7 @@ export default {
       host: location.hostname,
       challenge: "dddd",
       domain: location.host,
-      QRCodeValue: location.host,
+      QRCodeValue: this.$route.query,
       credentials: {},
       userData: {},
       proof: "",

@@ -7,7 +7,19 @@ import { getChallange, verify } from 'lds-sdk'
 const  {sha256hashStr} = require('../../../client/src/crypto-lib/symmetric.js')
 
 const check = (req: Request, res: Response) => {
-    res.send('/api/auth api working!')
+    const param = {
+        chJWT: "chJWT",
+        challenge: "challenge",
+        domain: "pkiAuth.com",
+        redirect_uri: "redirect_uri"
+    }
+
+    let query = "?";
+    Object.keys(param).forEach((k) => {
+        query += `${k}=${param[k]}&`
+    })
+    query = query.slice(0, query.length-1)
+    res.redirect(`http://localhost:8080/login${query}`)
 }
 
 const register = async (req: Request, res: Response) => {
