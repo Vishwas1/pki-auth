@@ -25,7 +25,7 @@
 <template>
   <!-- <div class="home"> -->
   <div class="row">
-    <div class="col-md-4" style="margin-left: 17%;">
+    <!-- <div class="col-md-4" style="margin-left: 17%;">
       <b-card no-body style="padding: 40px">
         <h2>Basic Authentication</h2>
         <hr />
@@ -54,8 +54,8 @@
           </div>
         </div>
       </b-card>
-    </div>
-    <div class="col-md-4">
+    </div> -->
+    <!-- <div class="col-md-4">
       <b-card no-body style="padding: 40px">
         <h2>PKI Authentication</h2>
         <hr />
@@ -106,6 +106,24 @@
           </div>
         </div>
       </b-card>
+    </div> -->
+
+
+    <div class="col-md-4" style="margin-left: 30%;">
+      <b-card no-body style="padding: 40px">
+        <h2>Login</h2>
+        <hr />
+        <div class="row">
+          <div class="col-md-12">
+            <button
+              type="button"
+              data-toggle="modal"
+              @click="login('BASIC')"
+              class="btn btn-outline-primary btn-lg btn-block floatLeft"
+            >Login With Hypersign Id</button>
+          </div>
+        </div>
+      </b-card>
     </div>
   </div>
   <!-- </div> -->
@@ -136,15 +154,15 @@ export default {
     };
   },
   created(){
-    const url = `http://${this.host}:5000/api/auth/challenge`;
-    fetch(url)
-    .then(res => res.json())
-    .then(json => {
-      if(json.status == 200){
-        this.challenge = json.message
-      }
-    })
-    .catch(e => alert(`Error: ${e.message}`))
+    // const url = `http://${this.host}:5000/api/auth/challenge`;
+    // fetch(url)
+    // .then(res => res.json())
+    // .then(json => {
+    //   if(json.status == 200){
+    //     this.challenge = json.message
+    //   }
+    // })
+    // .catch(e => alert(`Error: ${e.message}`))
   },
   mounted(){
 

@@ -13,10 +13,10 @@
     <div class="row">
       <div class="col-md-8 centeralign logo leftAlign">
         <!-- <h3><img class="logo" src="https://forum.aeternity.com/uploads/db0917/original/1X/543f494a818af66690a1298689af3fdd0c6389a1.png"> | Laboratory</h3> -->
-        <h2>Authentication Playground</h2>
+        <h2>Demo Web Application</h2>
         <h6
           style="color:grey; font-style: italic;"
-        >A simple tool to demonstrate different types of authentications!</h6>
+        >A webapp to demonstrate how HypersignId works!</h6>
         <hr style="opacity: 1.5" />
       </div>
     </div>
