@@ -73,7 +73,7 @@
             </div>
             <div class="col-md-3">
               Back to
-              <a href="/login">Login</a>
+              <a href="/dashboard/login">Login</a>
             </div>
           </div>
         </b-card>

@@ -25,10 +25,9 @@
 <template>
   <!-- <div class="home"> -->
   <div class="row">
-    <!-- <div class="col-md-6" style="margin-left: 17%;"> -->
-    <div class="col-md-4" style="margin-left: 30%;">
+    <!-- <div class="col-md-4" style="margin-left: 17%;">
       <b-card no-body style="padding: 40px">
-        <h2>Admin Login</h2>
+        <h2>Basic Authentication</h2>
         <hr />
         <div class="row">
           <form action="#" class="col-md-12">
@@ -51,14 +50,14 @@
           </div>
           <div class="col-md-6 floatRight">
             Do not have account?
-            <a href="/dashboard/register">SignUp</a>
+            <a href="/register">SignUp</a>
           </div>
         </div>
       </b-card>
-    </div>
-    <!-- <div class="col-md-4">
+    </div> -->
+    <div class="col-md-4" style="margin-left: 30%">
       <b-card no-body style="padding: 40px">
-        <h2>PKI Authentication</h2>
+        <h2>User Login</h2>
         <hr />
         <div class="row">
           <form action="#" class="col-md-12">
@@ -101,13 +100,13 @@
               class="btn btn-primary floatLeft"
             >Login</button>
           </div>
-          <div class="col-md-6 floatRight">
+          <!-- <div class="col-md-6 floatRight">
             Do not have account?
-            <a href="/dashboard/register_pki">SignUp</a>
-          </div>
+            <a href="/register_pki">SignUp</a>
+          </div> -->
         </div>
       </b-card>
-    </div> -->
+    </div>
   </div>
   <!-- </div> -->
 </template>

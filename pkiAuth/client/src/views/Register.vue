@@ -26,7 +26,7 @@
   <div class="home">
     <div class="col-md-4 centeralign">
       <b-card no-body style="padding: 40px">
-        <h2>Sign Up</h2>
+        <h2>Admin Registration</h2>
         <hr>
         <div class="row">
           <form action="#" class="col-md-12">
@@ -67,7 +67,7 @@
           </div>
           <div class="col-md-6">
             Back to
-            <a href="/login">Login</a>
+            <a href="/dashboard/login">Login</a>
           </div>
         </div>
       </b-card>

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from './views/Login.vue'
+import PKIIdLogin from './views/PKIIdLogin.vue'
 import Register from './views/Register.vue'
 import Register_PKI from './views/Register_pki.vue'
 import Customers from './views/Customers.vue'
@@ -16,15 +17,20 @@ const router =  new Router({
   routes: [
     {
       path: '/',
-      redirect: '/login'
+      redirect: '/dashboard/login'
     },
     {
       path: '/login',
+      name: 'PKIIdLogin',
+      component: PKIIdLogin
+    },
+    {
+      path: '/dashboard/login',
       name: 'login',
       component: Login
     },
     {
-      path: '/register',
+      path: '/dashboard/register',
       name: 'register',
       component: Register
     },
@@ -44,8 +50,8 @@ const router =  new Router({
       component: CustomerDetails
     },
     {
-      path: '/crypto',
-      name: 'crypto',
+      path: '/dashboard/home',
+      name: 'home',
       component: Home,
       meta: {
         requiresAuth: true
@@ -68,7 +74,7 @@ router.beforeEach((to, from, next) => {
       .then(json => {
         if(json.status == 403){
           next({
-            path: '/login',
+            path: '/dashboard/login',
             params: { nextUrl:  to.fullPath}
           })  
         }else{
@@ -77,7 +83,7 @@ router.beforeEach((to, from, next) => {
       })
       .catch((e)=> {
         next({
-          path: '/login',
+          path: '/dashboard/login',
           params: { nextUrl:  to.fullPath}
         })
       })
