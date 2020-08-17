@@ -9,6 +9,7 @@ export class Application implements IApplication{
     name: string;
     dbSerice: DBService;
     userId: string;
+    prefix: string;
     constructor({ appId = " ", appSecret = " ", name = " ", userId= " ", isActive = " "}){
         this.appId = appId// new uuid
         this.id = this.appId;
@@ -17,6 +18,7 @@ export class Application implements IApplication{
         this.name = name;
         this.userId = userId;
         this.dbSerice = new DBService();
+        this.prefix = 'app_';
     }
 
     toString(user: IApplication){
@@ -24,9 +26,9 @@ export class Application implements IApplication{
     }
 
     async create(){
-        this.appId = getChallange();
+        this.appId = this.prefix + getChallange();
         this.id = this.appId;
-        this.appSecret = getChallange();
+        this.appSecret = this.prefix+ getChallange();
         this.isActive = "true";
         const newUser:IApplication = await this.dbSerice.add(SchemaType.Application, this);
         return this.toString(newUser)

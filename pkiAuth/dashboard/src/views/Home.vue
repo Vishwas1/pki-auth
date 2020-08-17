@@ -23,6 +23,11 @@
   list-style-type:none;
 }
 
+.title {
+  color: grey;
+  font-size: 18px;
+}
+
 </style>
 <template>
   <div class="home">
@@ -41,19 +46,35 @@
     </div>
     <div class="row" style="margin-top: 2%">
       <div class="col-md-4">
-        <b-card no-body style="padding: 20px">
-          <h3>Your Profile:</h3>
-            <hr/>
-             <table class="table table-bordered">
-                <tr v-for="item in userKeys" :key="item" >
-                  <td v-if="user[item] != '' && item != 'password'"><span class="floatLeft">{{item}}</span></td>
-                  <td v-if="user[item] != '' && item != 'password'"><span class="floatLeft">{{ user[item] }}</span></td>
-                </tr>
-              </table>
-            
-            <div>
+        <!-- <b-card no-body style="padding: 20px">    
+            <div class="row">
+              <div class="col-md-12">
+                <h3>Your Profile:</h3>
+                <hr/>
+              </div>
             </div>
-        </b-card>
+
+            <div class="row">
+              <div class="col-md-12">
+                  <table class="table table-bordered">
+                    <tr v-for="item in userKeys" :key="item" >
+                      <td v-if="user[item] != '' && item != 'password'" style="word-wrap: break-word; text-align:left">{{item}}</td>
+                      <td v-if="user[item] != '' && item != 'password'" style="word-wrap: break-word; text-align:left">{{ user[item] }}</td>
+                    </tr>
+                  </table>
+              </div>
+            </div>
+
+        </b-card> -->
+<div class="card">
+  <img src="https://cdn1.iconfinder.com/data/icons/female-avatars-vol-1/256/female-portrait-avatar-profile-woman-sexy-afro-2-512.png" alt="John" style="width:100%;" >
+  <h2>{{user.fname}}</h2>
+  <!-- <p class="title">CEO & Founder, Example</p> -->
+  <p class="title">{{user.id}}</p>
+  <p class="title">{{user.email}} | +91-{{user.phoneNumber}}</p>
+  <p class="title"> {{user.username}}</p>
+</div>
+
       </div>
       <div class="col-md-8">
         <b-card no-body style="padding: 20px">
@@ -79,15 +100,14 @@
                       <div class="card" style="width: 25rem;text-align: left">
                         <div class="card-body">
                           <h5 class="card-title">{{app.name}}</h5>
-                          <!-- <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6> -->
                           <hr/>
                             <p class="card-text" style="padding: 2px;">
                               <ul>
                                 <li>
-                                  <b>App Id: </b><label>{{app.appId}}</label>
+                                  <b>App Id: </b>{{app.appId}}
                                 </li>
                                 <li>
-                                  <b>App Secret: </b><label>{{app.appSecret}}</label>
+                                  <b>App Secret: </b>{{app.appSecret}}
                                 </li>
                                 <li>
                                   <b># of Login: </b><label>12</label>
@@ -99,7 +119,7 @@
                         </div>
                       </div>
                     </li>
-            </ul>
+                  </ul>
               </div>
             </div>
         </b-card>

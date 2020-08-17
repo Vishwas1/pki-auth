@@ -14,9 +14,10 @@ export class User implements IUser{
     dbSerice: DBService;
     hash: string;
     birthdate: string;
-    jobTitle: string
-    constructor({ fname = "", lname = "", username ="", phoneNumber = "", password ="", email = "", publicKey, privateKey = "", hash ="", birthdate ="", jobTitle=""}: IUser){
-        this.id = getChallange(); // new uuid
+    jobTitle: string;
+    prefix: string;
+    constructor({ id = " ", fname = "", lname = "", username ="", phoneNumber = "", password ="", email = "", publicKey, privateKey = "", hash ="", birthdate ="", jobTitle=""}: IUser){
+        this.id = id; // new uuid
         this.fname = fname;
         this.lname = lname;
         this.phoneNumber = phoneNumber;
@@ -29,6 +30,7 @@ export class User implements IUser{
         this.birthdate = birthdate;
         this.jobTitle = jobTitle;
         this.dbSerice = new DBService();
+        this.prefix = 'usr_';
     }
 
     toString(user: IUser){
@@ -36,6 +38,7 @@ export class User implements IUser{
     }
 
     async create(){
+        this.id = this.prefix + getChallange();
         console.log(`User server : Creat Method::`)
         const newUser:IUser = await this.dbSerice.add<IUser>(SchemaType.User, this);
         return this.toString(newUser)
