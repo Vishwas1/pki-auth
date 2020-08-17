@@ -55,7 +55,7 @@
         </div>
       </b-card>
     </div> -->
-    <div class="col-md-4" style="margin-left: 30%">
+    <div class="col-md-4" style="margin-left: 34%">
       <b-card no-body style="padding: 40px">
         <h2>User Login</h2>
         <hr />

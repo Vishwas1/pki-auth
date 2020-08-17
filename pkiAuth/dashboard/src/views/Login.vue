@@ -26,7 +26,7 @@
   <!-- <div class="home"> -->
   <div class="row">
     <!-- <div class="col-md-6" style="margin-left: 17%;"> -->
-    <div class="col-md-4" style="margin-left: 30%;">
+    <div class="col-md-4" style="margin-left: 34%;">
       <b-card no-body style="padding: 40px">
         <h2>Admin Login</h2>
         <hr />
