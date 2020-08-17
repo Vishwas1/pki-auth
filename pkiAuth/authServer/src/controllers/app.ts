@@ -2,7 +2,7 @@ import {Request, Response} from 'express'
 import { Application } from '../services/application.service';
 import IApplication from '../models/IApplication';
 import jwt from 'jsonwebtoken';
-import { logger, jwtSecret } from '../config';
+import { logger, jwtSecret, jwtExpiryInMilli } from '../config';
 import { getChallange } from 'lds-sdk'
 
 const registerApp = async (req: Request, res: Response) => {
@@ -30,7 +30,7 @@ const validateApp = async (req: Request, res: Response) => {
             jwt.sign(
                 appInDb, 
                 jwtSecret, 
-                { expiresIn: '120s' },
+                { expiresIn: jwtExpiryInMilli },
                 (err, token) => {
                     if(err) throw new Error(err)
                     res.status(200).send({ status: 200, message: {
@@ -62,7 +62,7 @@ const login = (req: Request, res: Response) => {
         jwt.sign(
             param, 
             jwtSecret, 
-            { expiresIn: '120s' },
+            { expiresIn: jwtExpiryInMilli },
             (err, token) => {
                 if(err) throw new Error(err)
                 param['challengeToken'] = token;

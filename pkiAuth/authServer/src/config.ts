@@ -43,10 +43,12 @@ const did = {
 }
 
 const jwtSecret = process.env.JWT_SECRET || 'secretKey'
+const jwtExpiryInMilli = 240000
 export  {
     port,
     logger,
     db,
     did,
-    jwtSecret
+    jwtSecret,
+    jwtExpiryInMilli
 }

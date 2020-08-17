@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { User } from '../services/user.service';
 import IUser  from '../models/IUser'
-import { logger, jwtSecret } from '../config'
+import { logger, jwtSecret, jwtExpiryInMilli } from '../config'
 import jwt from 'jsonwebtoken';
 import { getChallange, verify } from 'lds-sdk'
 const  {sha256hashStr} = require('../../../dashboard/src/crypto-lib/symmetric.js')
@@ -87,7 +87,7 @@ const login = async (req: Request, res: Response) => {
         jwt.sign(
             userData, 
             jwtSecret, 
-            { expiresIn: '30s' },
+            { expiresIn: jwtExpiryInMilli },
             (err, token) => {
                 if(err) throw new Error(err)
                 res.status(200).send({ status: 200, message: {
@@ -111,7 +111,7 @@ const getNewChallenge = (req: Request, res: Response) => {
     jwt.sign(
         {challenge}, 
         jwtSecret, 
-        { expiresIn: '30s' },
+        { expiresIn: jwtExpiryInMilli },
         (err, token) => {
             if(err) throw new Error(err)
             res.status(200).send({ status: 200, message: {
