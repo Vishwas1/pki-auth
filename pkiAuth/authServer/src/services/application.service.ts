@@ -25,10 +25,15 @@ export class Application implements IApplication{
         return JSON.stringify(user);
     }
 
+    private getId(){
+        const uuid = this.prefix + getChallange()
+        return uuid.substring(0, 20)
+    }
+
     async create(){
-        this.appId = this.prefix + getChallange();
+        this.appId = this.getId();
         this.id = this.appId;
-        this.appSecret = this.prefix+ getChallange();
+        this.appSecret = this.getId();
         this.isActive = "true";
         const newUser:IApplication = await this.dbSerice.add(SchemaType.Application, this);
         return this.toString(newUser)

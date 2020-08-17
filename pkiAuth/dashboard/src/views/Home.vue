@@ -34,7 +34,7 @@
     <div class="col-md-8 centeralign">
     <div class="row">
       <div class="col-md-6" >
-        <h3 style="float:left">Admin Portal</h3>
+        <h3 style="float:left">Admin Dashboard</h3>
       </div>
       <div class="col-md-6" >
         <!-- <h5 style="float:left">Welcome {{user.email}}! </h5> -->

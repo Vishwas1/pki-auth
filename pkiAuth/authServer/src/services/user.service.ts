@@ -37,8 +37,12 @@ export class User implements IUser{
         return JSON.stringify(user);
     }
 
+    private getId(){
+        const uuid = this.prefix + getChallange()
+        return uuid.substring(0, 20)
+    }
     async create(){
-        this.id = this.prefix + getChallange();
+        this.id = this.getId();
         console.log(`User server : Creat Method::`)
         const newUser:IUser = await this.dbSerice.add<IUser>(SchemaType.User, this);
         return this.toString(newUser)
