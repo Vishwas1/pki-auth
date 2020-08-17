@@ -39,9 +39,9 @@ export class Application implements IApplication{
         const props = Object.getOwnPropertyNames(this);
         let queryParams = {};
         props.forEach(e => {
-            if(e != 'dbSerice'){
-                if(this[e] != " ") queryParams[e] = this[e]
-            }
+            if(e == 'dbSerice') return;
+            if(e == 'prefix') return;
+            if(this[e] != " ") queryParams[e] = this[e]
         })
         let users = await this.dbSerice.getAll(SchemaType.Application, queryParams);
         return users

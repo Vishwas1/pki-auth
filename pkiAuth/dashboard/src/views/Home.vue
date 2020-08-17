@@ -78,18 +78,19 @@
       </div>
       <div class="col-md-8">
         <b-card no-body style="padding: 20px">
-          <h3>Your Application:</h3>
+          <h3 style="text-align:left">Your Applications</h3>
             <hr/>
             
             <div class="row" >
               <div class="col-md-6 floatRight">
-              </div>
-              <div class="col-md-6 floatRight">
-                    <input type="text" placeholder="Enter App Name" size="35" v-model="appName" required>
+                <input type="text" placeholder="Enter App Name" size="35" v-model="appName" required>
                     <button  style="float:right" type="button"
                         data-toggle="modal"
                         @click="createApp()"
                         class="btn btn-outline-primary">+</button>
+              </div>
+              <div class="col-md-6 floatRight">
+                    
               </div>
             </div>
             <hr/>
