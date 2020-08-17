@@ -6,7 +6,7 @@ import { db, logger } from '../config'
 
 const FieldMap = Object.freeze({
     User: ["id","fname","lname","phoneNumber","username","password","email","publicKey","privateKey","hash","birthdate","jobTitle"],
-    Application: ["id","appId","appSecret","isActive", "name"]
+    Application: ["id","appId","appSecret","isActive", "name", "userId"]
 })
 
 export enum SchemaType {
@@ -111,32 +111,17 @@ export class DBService{
             const query = this.getQuery(QueryType.InsertRow, type);
             logger.debug('Method: Add: schema type is USER, query =' + query)
             let values = FieldMap[SchemaType[type]].map(k => obj[k]) as Array<string>;
-            logger.debug('Method: Add: Before inserting the data');
+            logger.debug('Method: Add: Before inserting the data values =' +  values);
             db.run(query, values, (err, res) => {
                 if(err) {
                     logger.error(err)
                     reject(err)
                 }
-                this.getOne(type, { id: obj["id"] }).then((res: IUser)=> {
+                this.getOne(type, { id: obj["id"] }).then((res)=> {
                     logger.debug('Method: Add: After inserting the data, newRecordId = ', res.id);
                     resolve(res)
                 })
             })
-        })
-    }
-
-    get(type: SchemaType, clause: {}): Promise<Array<any>>{
-        return new Promise((resolve, reject) => {
-            const query = this.getQuery(QueryType.GetRows, type);
-                logger.info('Method: Get: schema type is USER')
-                logger.info('Method: Get: Before fetching rows');
-                db.all(query, [], (err, rows: Array<IUser>) => {
-                    if (err) {
-                        return reject(err)
-                    }
-                    return resolve(rows);
-                });
-            
         })
     }
 
@@ -149,11 +134,31 @@ export class DBService{
                 query = query + ' ' + v + ' = ? AND';
             })
             query = query.substring(0, query.lastIndexOf('AND'))
-            logger.info('Before fetching the user query = ' + query)
+            logger.debug('Before fetching the user query = ' + query)
             const values = Object.keys(params).map(k => params[k])
-            db.get(query, values, (err, row: IUser) => {
+            logger.debug(`Values = `, values)
+            db.get(query, values, (err, row) => {
                 if (err) return reject(err)
                 return resolve(row);
+            });    
+        })
+    }
+
+    getAll(type: SchemaType, params):Promise<Array<Object>>{
+        return new Promise((resolve, reject) => {
+            logger.info('Method: Get: schema type is ' + SchemaType[type])
+            const cols = Object.keys(params)
+            let query = this.getQuery(QueryType.GetRows, type) + ' WHERE '; // gET * from User 
+            cols.forEach((v, i)=> {
+                query = query + ' ' + v + ' = ? AND';
+            })
+            query = query.substring(0, query.lastIndexOf('AND'))
+            logger.debug('Before fetching the user query = ' + query)
+            const values = Object.keys(params).map(k => params[k])
+            logger.debug(`Values = `, values)
+            db.all(query, values, (err, rows) => {
+                if (err) return reject(err)
+                return resolve(rows);
             });    
         })
     }

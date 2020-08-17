@@ -4,7 +4,7 @@ import IUser  from '../models/IUser'
 import { logger, jwtSecret } from '../config'
 import jwt from 'jsonwebtoken';
 import { getChallange, verify } from 'lds-sdk'
-const  {sha256hashStr} = require('../../../client/src/crypto-lib/symmetric.js')
+const  {sha256hashStr} = require('../../../dashboard/src/crypto-lib/symmetric.js')
 
 const check = (req: Request, res: Response) => {
     const param = {

@@ -4,4 +4,5 @@ export default interface IApplication{
     appSecret: string;
     isActive: string;
     name: string;
+    userId: string;
 }

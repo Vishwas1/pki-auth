@@ -8,12 +8,14 @@ export class Application implements IApplication{
     isActive: string;
     name: string;
     dbSerice: DBService;
-    constructor({ appId = " ", appSecret = " ", name = " "}){
-        this.appId = appId == " " ? getChallange(): appId; // new uuid
+    userId: string;
+    constructor({ appId = " ", appSecret = " ", name = " ", userId= " ", isActive = " "}){
+        this.appId = appId// new uuid
         this.id = this.appId;
-        this.appSecret = appSecret == " "?getChallange(): appSecret;
-        this.isActive = "true";
+        this.appSecret = appSecret;
+        this.isActive = isActive;
         this.name = name;
+        this.userId = userId;
         this.dbSerice = new DBService();
     }
 
@@ -22,12 +24,24 @@ export class Application implements IApplication{
     }
 
     async create(){
+        this.appId = getChallange();
+        this.id = this.appId;
+        this.appSecret = getChallange();
+        this.isActive = "true";
         const newUser:IApplication = await this.dbSerice.add(SchemaType.Application, this);
         return this.toString(newUser)
     }
 
     async fetch(){
-        let user:Application = await this.dbSerice.getOne(SchemaType.Application, {appId: this.appId});
-        return this.toString(user)
+        // delete this['dbSerice']
+        const props = Object.getOwnPropertyNames(this);
+        let queryParams = {};
+        props.forEach(e => {
+            if(e != 'dbSerice'){
+                if(this[e] != " ") queryParams[e] = this[e]
+            }
+        })
+        let users = await this.dbSerice.getAll(SchemaType.Application, queryParams);
+        return users
     }
 }
