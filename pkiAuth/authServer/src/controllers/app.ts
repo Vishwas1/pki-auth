@@ -8,6 +8,7 @@ import { getChallange } from 'lds-sdk'
 const registerApp = async (req: Request, res: Response) => {
     try{
         const { id } =  res.locals.data;
+        console.log(req.body)
         const { name } = req.body;
         if(!name) throw new Error('App name is required!');
         const appObj = new Application({name, userId: id});

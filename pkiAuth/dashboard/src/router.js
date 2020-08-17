@@ -20,6 +20,10 @@ const router =  new Router({
       redirect: '/dashboard/login'
     },
     {
+      path: '/dashboard',
+      redirect: '/dashboard/login'
+    },
+    {
       path: '/login',
       name: 'PKIIdLogin',
       component: PKIIdLogin

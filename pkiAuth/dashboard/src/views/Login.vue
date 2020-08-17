@@ -137,15 +137,15 @@ export default {
     };
   },
   created(){
-    const url = `http://${this.host}:5000/api/auth/challenge`;
-    fetch(url)
-    .then(res => res.json())
-    .then(json => {
-      if(json.status == 200){
-        this.challenge = json.message
-      }
-    })
-    .catch(e => alert(`Error: ${e.message}`))
+    // const url = `http://${this.host}:5000/api/auth/challenge`;
+    // fetch(url)
+    // .then(res => res.json())
+    // .then(json => {
+    //   if(json.status == 200){
+    //     this.challenge = json.message
+    //   }
+    // })
+    // .catch(e => alert(`Error: ${e.message}`))
   },
   mounted(){
 
@@ -236,13 +236,14 @@ export default {
           if (j && j.status == 500) {
             return alert(`Error:  ${j.error}`);
           }
+          console.log('Validated')
           localStorage.setItem("authToken", j.message.jwtToken);
           localStorage.setItem("user", JSON.stringify(j.message.user));
           if (localStorage.getItem("authToken") != null) {
             if (this.$route.params.nextUrl != null) {
               this.$router.push(this.$route.params.nextUrl);
             } else {
-              this.$router.push("crypto");
+              this.$router.push("home");
             }
           }
         });
