@@ -51,7 +51,7 @@ export class DBService{
                     fields.password ,fields.email, fields.publicKey, 
                     fields.hash, fields.birthdate, fields.jobTitle], (err, res) => {
                     if(err) reject(err)
-                    this.getOne(schemaType.USER, { publicKey: fields.publicKey }).then((res: IUser)=> {
+                    this.getOne(schemaType.USER, { email: fields.email }).then((res: IUser)=> {
                         logger.debug('Method: Add: After inserting the data, newRecordId = ', res.id);
                         resolve(res)
                     })

@@ -73,12 +73,16 @@ export default {
     return {
       active: 0,
       userKeys: [],
-      user: {}
+      user: {},
+      authToken: null
     };
   },
   created() {
-    const usrStr = localStorage.getItem('user')
-    this.user = JSON.parse(usrStr);
+    const query = this.$router.history.current.query
+    this.authToken = query['authToken']
+    this.user = JSON.parse(query['data'])
+    localStorage.setItem('authToken', this.authToken);
+    localStorage.setItem('user', this.user);
     this.userKeys = Object.keys(this.user)
   },
   methods: {

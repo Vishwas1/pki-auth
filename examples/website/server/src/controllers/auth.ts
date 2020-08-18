@@ -57,8 +57,8 @@ const login_callback = async (req: Request, res: Response) => {
         { expiresIn: jwtExpiryInMilli },
         (err, token) => {
             if(err) throw new Error(err)
-            const query = `?data=${JSON.stringify(userInDB)}&jwtToken=${token}`
-            res.redirect(`http://localhost:6001/crypto?${query}`)
+            const query = `?jwtToken=${token}&data=${JSON.stringify(userInDB)}`
+            res.redirect(encodeURI(`http://localhost:6001/crypto?${query}`))
     }) 
 }
 const login = async (req: Request, res: Response) => {

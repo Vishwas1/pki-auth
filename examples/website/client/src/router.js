@@ -51,13 +51,16 @@ const router =  new Router({
   ]
 })
 
-router.afterEach((to, from) => {
-  console.log(to.matched)
+// router.afterEach((to, from) => {
+//   console.log(to)
+//   console.log(from)
 
-  if(to.matched.find(e => e.name == 'crypto')){
-
-  }
-})
+//   if(to.matched.find(e => e.name == 'crypto')){
+//     const token = to.query['jwtToken']
+//     console.log(token)
+//     localStorage.setItem('authToken', token)
+//   }
+// })
 
 router.beforeEach((to, from, next) => {
   
