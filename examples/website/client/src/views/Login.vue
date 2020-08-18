@@ -115,12 +115,12 @@
         <hr />
         <div class="row">
           <div class="col-md-12">
-            <button
+            <a
               type="button"
               data-toggle="modal"
-              @click="login('BASIC')"
+              href="http://localhost:9000/api/auth/login"
               class="btn btn-outline-primary btn-lg btn-block floatLeft"
-            >Login With Hypersign Id</button>
+            >Login With Hypersign Id</a>
           </div>
         </div>
       </b-card>
@@ -220,18 +220,18 @@ export default {
         alert(`Error: ${e.message}`);
       }
     },
-    async login(type) {
+    async login1(type) {
      try{
       let url = "";
       let headers = {
         "Content-Type": "application/json"
       }
       if (type === "PKI") {
-        url = `http://${this.host}:5000/api/auth/login_pki?type=PKI`;
+        url = `http://${this.host}:6000/api/auth/login_pki?type=PKI`;
         headers['x-auth-token'] = this.challenge.JWTChallenge;
         await this.generateProof();
       } else {
-        url = `http://${this.host}:5000/api/auth/login`;
+        url = `http://${this.host}:6000/api/auth/login`;
       }
       const userData = {
         username: this.username,
@@ -266,8 +266,18 @@ export default {
      }catch(e){
        alert(`Error: ${e.message}`)
      }
-      
     },
+
+    async login(type){
+      try{
+        const url = `http://${this.host}:9000/api/auth/login`;
+        console.log('sending login request to web server ' + url)
+        fetch(url).then(res => res.json())
+        .then(j =>  console.log(j));
+      }catch(e){
+       alert(`Error: ${e.message}`)
+     }
+    }
   },
 };
 </script>

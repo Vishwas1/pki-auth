@@ -44,11 +44,46 @@ const did = {
 
 const jwtSecret = process.env.JWT_SECRET || 'secretKey'
 const jwtExpiryInMilli = 240000
+
+
+// AuthServer configurations
+const hypersign_auth_config = {
+    auth_server_url: process.env.AUTH_SERVER_URL || 'http://localhost:5000/api/app',
+}
+hypersign_auth_config['oauthAPI'] = {
+    method: 'POST',
+    uri: `${hypersign_auth_config.auth_server_url}/oauth`,
+    params: ['appId','appSecret'],
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+}
+
+hypersign_auth_config['loginPageAPI'] = {
+    method: 'POST',
+    uri: `${hypersign_auth_config.auth_server_url}/login`,
+    params: ['domainName', 'redirect_uri'],
+    headers: {
+        'x-auth-token': "",
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+}
+
+const hypersign_app_config = {
+    appId: "app_0598e629-78fb-49",
+    appSecret: "app_ab08bf75-0975-40",
+    redirect_uri: "http://localhost:9000/api/auth/login/callback",
+    domainName: "http://localhost:9000"
+}
 export  {
     port,
     logger,
     db,
     did,
     jwtSecret,
-    jwtExpiryInMilli
+    jwtExpiryInMilli,
+    hypersign_auth_config,
+    hypersign_app_config
 }

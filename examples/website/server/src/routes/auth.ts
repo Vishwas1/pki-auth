@@ -6,7 +6,7 @@ import verifyAuth from '../middleware/auth'
 const router = Router();
 router.get('/', authCtrl.check)
 router.post('/register', authCtrl.register)
-router.post('/login', authCtrl.login)
+// router.post('/login', authCtrl.login)
 router.post('/login_pki', verifyAuth, authCtrl.login)
 router.post('/recover', authCtrl.recover)
 router.get('/challenge', authCtrl.getNewChallenge)
@@ -21,4 +21,7 @@ router.post('/verify', verifyAuth , (req, res) => {
     })
 })
 
+router.get('/login', authCtrl.login)
+// Redirect uri for authServer to give the user detials
+router.post('/login/callback', authCtrl.login_callback);
 export default router;

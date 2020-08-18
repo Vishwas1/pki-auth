@@ -48,17 +48,21 @@ const validateApp = async (req: Request, res: Response) => {
 }
 
 const login = (req: Request, res: Response) => {
+    logger.debug('AuthServer: Inside login route')
     try{
         const appData: IApplication = res.locals.data as IApplication;
         if(!appData){
             throw new Error("App data not found")
         }
-        const { domainName, redirect_uri } = req.query;
+        logger.debug('AuthServer: login: AppData = ' + JSON.stringify(appData))
+        const { domainName, redirect_uri } = req.body;
+        logger.debug('AuthServer: login: req.body = ' + JSON.stringify({ domainName, redirect_uri }))
         if(!domainName || !redirect_uri) throw new Error('domainName and redirect_uri is required')
 
         const challenge = getChallange();
         const param = { appId:appData.appId, domainName, redirect_uri, challenge }
 
+        logger.debug('Param = '+ JSON.stringify(param))
         jwt.sign(
             param, 
             jwtSecret, 
@@ -71,10 +75,12 @@ const login = (req: Request, res: Response) => {
                     query += `${k}=${param[k]}&`
                 })
                 query = query.slice(0, query.length-1)
-                // res.redirect(encodeURI(`http://localhost:8080/login${query}`))
-                res.send({
-                    url: encodeURI(`http://localhost:8080/login${query}`)
-                })
+                logger.debug('Before redirecting to the login page....')
+                const encodedURi = encodeURI(`http://localhost:5001/login${query}`)
+                logger.debug('encodedURi = '+ encodedURi)
+                res.status(200).send({ status: 200, message: {
+                    url: encodedURi
+                }, error: null})
         })
     }catch(e){
         res.status(500).send({ status: 500, message: null, error: e.message})
