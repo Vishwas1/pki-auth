@@ -73,7 +73,7 @@
             </div>
             <div class="col-md-3">
               Back to
-              <a href="/dashboard/login">Login</a>
+              <button type="button" class="btn btn-link" @click="$router.back()">Login</button>
             </div>
           </div>
         </b-card>
@@ -140,10 +140,16 @@ export default {
       jobTitle: "Engineer",
       host: location.hostname,
       credentials: "",
-      userData: ""
+      userData: "",
+      prevRoute: null
     };
   },
   created() {},
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.prevRoute = from
+    })
+  },
   methods: {
     gotosubpage: (id) => {
       this.$router.push(`${id}`);
@@ -204,7 +210,8 @@ export default {
             if (j && j.status == 500) {
               return alert(`Error:  ${j.error}`);
             }
-            this.$router.push("login");
+            // go back to the previous page where it came from 
+            this.$router.back()
           });
       } catch (e) {
         alert(e);

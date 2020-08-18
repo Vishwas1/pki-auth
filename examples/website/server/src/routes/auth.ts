@@ -23,5 +23,5 @@ router.post('/verify', verifyAuth , (req, res) => {
 
 router.get('/login', authCtrl.login)
 // Redirect uri for authServer to give the user detials
-router.post('/login/callback', authCtrl.login_callback);
+router.get('/login/callback', authCtrl.login_callback);
 export default router;

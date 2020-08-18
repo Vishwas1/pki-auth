@@ -100,10 +100,10 @@
               class="btn btn-primary floatLeft"
             >Login</button>
           </div>
-          <!-- <div class="col-md-6 floatRight">
+          <div class="col-md-6 floatRight">
             Do not have account?
             <a href="/register_pki">SignUp</a>
-          </div> -->
+          </div>
         </div>
       </b-card>
     </div>
@@ -115,6 +115,7 @@
 import { getChallange } from "lds-sdk";
 import QrcodeVue from "qrcode.vue";
 import { sign } from "lds-sdk";
+import { encryptData } from '../crypto-lib/symmetric'
 const {sha256hashStr} = require("../crypto-lib/symmetric");
 export default {
   name: "Login",
@@ -235,15 +236,22 @@ export default {
           if (j && j.status == 500) {
             return alert(`Error:  ${j.error}`);
           }
-          localStorage.setItem("authToken", j.message.jwtToken);
-          localStorage.setItem("user", JSON.stringify(j.message.user));
-          if (localStorage.getItem("authToken") != null) {
-            if (this.$route.params.nextUrl != null) {
-              this.$router.push(this.$route.params.nextUrl);
-            } else {
-              this.$router.push("crypto");
-            }
-          }
+          
+          console.log(this.$route.query)
+          console.log(j.message)
+          const encryptedUserData = encryptData(this.$route.query.appId, JSON.stringify(j.message.user))
+          const redirect_uri = this.$route.query.redirect_uri + '?userData=' + encryptedUserData
+          window.location.href = redirect_uri; 
+
+          // localStorage.setItem("authToken", j.message.jwtToken);
+          // localStorage.setItem("user", JSON.stringify(j.message.user));
+          // if (localStorage.getItem("authToken") != null) {
+          //   if (this.$route.params.nextUrl != null) {
+          //     this.$router.push(this.$route.params.nextUrl);
+          //   } else {
+          //     this.$router.push("crypto");
+          //   }
+          // }
         });
      }catch(e){
        alert(`Error: ${e.message}`)

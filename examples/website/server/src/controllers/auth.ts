@@ -5,7 +5,7 @@ import { logger, jwtSecret, jwtExpiryInMilli, hypersign_auth_config, hypersign_a
 import jwt from 'jsonwebtoken';
 import { getChallange, verify } from 'lds-sdk'
 import fetch  from 'node-fetch'
-const  {sha256hashStr} = require('../../../client/src/crypto-lib/symmetric.js')
+const  {sha256hashStr, decryptData} = require('../../../client/src/crypto-lib/symmetric.js')
 
 const check = (req: Request, res: Response) => {
     res.send('/api/auth api working!')
@@ -28,14 +28,38 @@ const register = async (req: Request, res: Response) => {
 const login_callback = async (req: Request, res: Response) => {
     // Call back came from authServer
     logger.debug('login_callback from authserver')
+    const encryptedUserData =  req.query.userData;
+    const userData = JSON.parse(decryptData(hypersign_app_config.appId, encryptedUserData))
+    
     // Get the userinfo from request
-    const { userData } = req.body;
     logger.debug('User data = ' + userData)
+    const names = userData.name.split(' ')
+    userData['fname'] = names[0];
+    userData['lname'] = names[1];
     const user = new User({...userData})
+    const userindbstr  = await user.fetch()
+    logger.debug('Userstrgin in db = ' + userindbstr)
+    let userInDB = {}
+    // user already does not exists ->  create a new one other wise leave it
     // Update / Insert it in the db
-    logger.debug('Before creating the user')
-    const createdUser = await user.create();
-    res.send('OK')
+    if(!userindbstr){
+        logger.debug('Before creating the user')
+        const createdUser = await user.create();
+        userInDB = JSON.parse(createdUser)
+    }else {
+        //TODO: Here it should be update the user inf as well
+        userInDB = JSON.parse(userindbstr)
+    }
+    //Generating Authorization token
+    jwt.sign(
+        userInDB, 
+        jwtSecret, 
+        { expiresIn: jwtExpiryInMilli },
+        (err, token) => {
+            if(err) throw new Error(err)
+            const query = `?data=${JSON.stringify(userInDB)}&jwtToken=${token}`
+            res.redirect(`http://localhost:6001/crypto?${query}`)
+    }) 
 }
 const login = async (req: Request, res: Response) => {
     try{
@@ -52,8 +76,6 @@ const login = async (req: Request, res: Response) => {
             headers: oauthAPi.headers
         })
         let json = await fres.json();
-        
-        
             if(json && json.status == 200){
                 const oauthToken = json.message.oauthToken
                 const loginAPi = hypersign_auth_config['loginPageAPI'];

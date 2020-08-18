@@ -42,7 +42,8 @@ export class User implements IUser{
     async fetch(ifPki = true){
         let obj= {}
         if(ifPki){
-            obj = {username: this.username, password: this.password, publicKey: this.publicKey}
+            // obj = {username: this.username, password: this.password, publicKey: this.publicKey}
+            obj = {email: this.email}
         }else{
             obj = {username: this.username, password: this.password}
         }

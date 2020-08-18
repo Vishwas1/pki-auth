@@ -46,15 +46,22 @@ const router =  new Router({
     {
       path: '/crypto',
       name: 'crypto',
-      component: Home,
-      meta: {
-        requiresAuth: true
-      } 
+      component: Home
     }
   ]
 })
 
+router.afterEach((to, from) => {
+  console.log(to.matched)
+
+  if(to.matched.find(e => e.name == 'crypto')){
+
+  }
+})
+
 router.beforeEach((to, from, next) => {
+  
+
   if(to.matched.some(record => record.meta.requiresAuth)){
     const authToken = localStorage.getItem('authToken')
     if(authToken){
