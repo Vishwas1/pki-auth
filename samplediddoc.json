@@ -1,0 +1,58 @@
+{
+    "@context": [
+        "https://www.w3.org/ns/did/v1",
+        "https://w3id.org/security/v1"
+    ],
+    "id": "did:auth:vishwas_abcd123",
+    "authentication": [
+        {
+            "id": "did:auth:vishwas_abcd123#keys-1",
+            "type": "Ed25519VerificationKey2018",
+            "controller": "did:auth:vishwas_abcd123",
+            "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+        }
+    ]
+}
+// authentication: can use to prove it is the DID subject or acting on behalf of the DID Subject as a DID Controller.
+// List of didMethods: https://w3c.github.io/did-spec-registries/#did-methods
+// https://www.w3.org/TR/did-core/ 
+{
+    "@context": [
+        "https://www.w3.org/ns/did/v1",
+        "https://w3id.org/security/v1"
+    ],
+    "id": "did:auth:vishwas_abcd123",
+    "publicKey": [
+        {
+            "id": "did:auth:vishwas_abcd123#keys-1",
+            "type": "Ed25519VerificationKey2018",
+            "controller": "did:auth:vishwas_abcd123",
+            "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+        }
+    ],
+    "authentication": [
+        "did:auth:vishwas_abcd123#keys-1"
+    ],
+    "created": "2002-10-10T17:00:00Z"
+}
+
+
+
+
+{
+    "@context": [
+        "https://www.w3.org/ns/did/v1",
+        "https://w3id.org/security/v1"
+    ],
+    "id": "did:auth:vishwas_abcd123",
+    "created": "2002-10-10T17:00:00Z",
+    "proof": {
+        "type": "Ed25519Signature2018",
+        "created": "2020-08-02T19:39:37Z",
+        "verificationMethod": "did:hsauth:id#z6MksKyyRftdAMhP6kniriC84DCZPXw5c8q2RkckipjmAakR",
+        "proofPurpose": "authentication",
+        "challenge": "ABC",
+        "domain": "example.com",
+        "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..XjNAx0kIov_oUdXqX_6D6mkshP8oa6227v0SArfLHq2I5IkKDU26713g2onTPBqALDmlskAIuEKQRLXmfpJaDQ"
+    }
+}
