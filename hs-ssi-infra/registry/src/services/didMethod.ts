@@ -37,6 +37,10 @@ export default class DIDMethod implements IDID{
         let didInDb:IDID  = await this.dbSerice.getOne(SchemaType.Did, { did});
         return JSON.parse(didInDb.didDoc)
     }
+
+    list = async () => {
+        return await this.dbSerice.getAll(SchemaType.Did, {});
+    }
 }
 
 

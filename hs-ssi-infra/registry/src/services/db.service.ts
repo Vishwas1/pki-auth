@@ -151,22 +151,35 @@ export class DBService{
         })
     }
 
-    getAll(type: SchemaType, params):Promise<Array<Object>>{
+    getAll(type: SchemaType, params: Object):Promise<Array<Object>>{
         return new Promise((resolve, reject) => {
             logger.info('Method: Get: schema type is ' + SchemaType[type])
-            const cols = Object.keys(params)
-            let query = this.getQuery(QueryType.GetRows, type) + ' WHERE '; // gET * from User 
-            cols.forEach((v, i)=> {
-                query = query + ' ' + v + ' = ? AND';
-            })
-            query = query.substring(0, query.lastIndexOf('AND'))
-            logger.debug('Before fetching the user query = ' + query)
-            const values = Object.keys(params).map(k => params[k])
-            logger.debug(`Values = `, values)
-            db.all(query, values, (err, rows) => {
-                if (err) return reject(err)
-                return resolve(rows);
-            });    
+            let query = this.getQuery(QueryType.GetRows, type)
+            let values: Array<String> = [];
+            let cols = Object.keys(params)
+            console.log(params)
+            if(cols.length > 0){
+                query  = query + ' WHERE '; // gET * from User 
+                cols.forEach((v, i)=> {
+                    query = query + ' ' + v + ' = ? AND';
+                })
+                query = query.substring(0, query.lastIndexOf('AND'))
+                logger.debug('Before fetching the user query = ' + query)
+                values = cols.map(k => params[k])
+                logger.debug(`Values = `, values)
+                db.all(query, values, (err, rows) => {
+                    if (err) return reject(err)
+                    return resolve(rows);
+                });    
+            }else{
+                logger.debug(`getAll method:: ${query}`)
+                db.all(query, (err, rows) => {
+                    if (err) return reject(err)
+                    return resolve(rows);
+                });    
+            }
+
+            
         })
     }
     

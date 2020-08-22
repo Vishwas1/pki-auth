@@ -27,14 +27,24 @@ const resolve = async (req, res) => {
     }catch(e){
         res.status(500).send({ status: 500, message: null, error: e.message})
     }
-
-
 }
 
+
+const list = async (req, res) => {
+    try{
+        if(!did) throw new Error('Did is required!')
+        const didMethod = new DIDMethod();
+        const list = await didMethod.list();
+        res.status(200).send({ status: 200, message: list, error: null})
+    }catch(e){
+        res.status(500).send({ status: 500, message: null, error: e.message})
+    }
+}
 
 export default {
     create,
     update, 
-    resolve
+    resolve,
+    list
 }
 
