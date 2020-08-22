@@ -12,6 +12,8 @@ The protocol uses Linked Data Signature and JSON Web Token as its core concepts 
 
 FIDO is trying to solve the very same problem. But FIDO is complex to understand and implement for a normal devleoper. More over it involved costs of certification and all. Here, our goal is to come up with a very light weight sdk so that developers can implement PKI efficiently and securely. 
 
+ [Read](https://github.com/WebOfTrustInfo/rwot6-santabarbara/blob/master/final-documents/did-auth.md#other-public-key-infrastructure-pgp-ssh-etc)
+
 ## Protocol
 
 ### Core concepts
@@ -109,9 +111,19 @@ Login | Proof
 ![db](docs/PKI-login.png) | ![db](docs/PKI-proof_.png)
 
 
-## Attack Vectors
+## Attack Vectors / Security concerns
 
 // TODO
+
+
+### Generating Challenge
+
+- [UUID](https://news.ycombinator.com/item?id=10631806) are not right way to generate nounce. 
+    - Read [here](https://stackoverflow.com/questions/33570933/how-should-i-construct-a-random-challenge-for-challenge-response-authentication) and [here](https://en.wikipedia.org/wiki/Salted_Challenge_Response_Authentication_Mechanism)
+- Possible way of challenge could be
+    - `ch = Sha3(UUID + time() + salt)`
+
+### Public Key
 
 ## Problems with Basic-Auth
 
