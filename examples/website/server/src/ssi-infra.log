@@ -1,6 +1,0 @@
-2020-08-14 07:00:57.177 INFO  WARNING!!!!!!! 
-2020-08-14 07:00:57.177 INFO  -> newdb : It will delete the database (if exists) and recreate. I hope you know what you doing. 
-2020-08-14 07:00:57.177 INFO  Method: constructor: DBService constructor 
-2020-08-14 07:00:57.187 INFO  The server is running on port 5000 
-2020-08-14 07:00:57.188 INFO  Connected to ssi-infa database. DB path = /home/vishwas/work/pki-auth/server/src/ssi.db 
-2020-08-14 07:00:57.192 ERROR ERROR 
