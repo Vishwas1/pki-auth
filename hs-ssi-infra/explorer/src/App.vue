@@ -13,10 +13,11 @@
     <div class="row">
       <div class="col-md-8 centeralign logo">
         <!-- <h3><img class="logo" src="https://forum.aeternity.com/uploads/db0917/original/1X/543f494a818af66690a1298689af3fdd0c6389a1.png"> | Laboratory</h3> -->
-        <h2>HyperSign Identity</h2>
+        <h2 class="leftAlign">HyperSign Identity Explorer</h2>
         <h6
+          class="leftAlign"
           style="color:grey; font-style: italic;"
-        >Password less authentication protocol using PKI and Linked Data Signature to protect user data.!</h6>
+        >DID Explorer for Hypersign Identity Chain!</h6>
         <hr style="opacity: 1.5" />
       </div>
     </div>

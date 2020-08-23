@@ -25,89 +25,89 @@
 <template>
   <!-- <div class="home"> -->
   <div class="row">
-    <!-- <div class="col-md-6" style="margin-left: 17%;"> -->
-    <div class="col-md-4" style="margin-left: 34%;">
-      <b-card no-body style="padding: 40px">
-        <h2>Admin Login</h2>
-        <hr />
-        <div class="row">
-          <form action="#" class="col-md-12">
-            <div class="form-group">
-              <input type="text" class="form-control" v-model="username" placeholder="Username" />
+    <div class="col-md-8" style="margin-left: 17%;">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-3">
+              <button
+                type="button"
+                data-toggle="modal"
+                @click="getList('DID')"
+                class="btn btn-link floatLeft"
+              >Did</button>
+              <button
+                type="button"
+                data-toggle="modal"
+                @click="getList('SCHEMA')"
+                class="btn btn-link floatLeft"
+                style="margin-left: 2px"
+              >Schema</button>
             </div>
-            <div class="form-group">
-              <input type="password" class="form-control" v-model="password" placeholder="Password" />
-            </div>
-          </form>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <button
-              type="button"
-              data-toggle="modal"
-              @click="login('BASIC')"
-              class="btn btn-primary floatLeft"
-            >Login</button>
-          </div>
-          <div class="col-md-6 floatRight">
-            Do not have account?
-            <a href="/dashboard/register">SignUp</a>
-          </div>
-        </div>
-      </b-card>
-    </div>
-    <!-- <div class="col-md-4">
-      <b-card no-body style="padding: 40px">
-        <h2>PKI Authentication</h2>
-        <hr />
-        <div class="row">
-          <form action="#" class="col-md-12">
-            <div class="form-group">
-              <qrcode-vue :value="QRCodeValue" :size="200" level="H"></qrcode-vue>
-              <label>Scan this QR code to authenticate!</label>
-            </div>
-            <hr />
-            <h2>Or</h2>
-            <div class="form-group">
-              <label class="floatLeft">Upload User Doc:</label>
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+              <form>
+  <div class="form-group">
               <input
-                type="file"
-                class="form-control"
-                placeholder
-                @change="onFileChange"
-                accept="*.json"
-              />
+                type="text"
+                class="form-control "
+                placeholder="Enter did or schemaId to search"
+              /></div></form>
             </div>
-            <div class="form-group">
-              <label class="floatLeft">Upload Credentials:</label>
-              <input type="file" class="form-control" placeholder @change="onFileChange" />
-            </div>
-          </form>
-        </div>
-        <div class="row">
-          <div class="col-md-3">
-            <button
-              type="button"
-              data-toggle="modal"
-              @click="downloadProof()"
-              class="btn btn-primary floatLeft"
-            >View Proof</button>
-          </div>
-          <div class="col-md-3">
-            <button
-              type="button"
-              data-toggle="modal"
-              @click="login('PKI')"
-              class="btn btn-primary floatLeft"
-            >Login</button>
-          </div>
-          <div class="col-md-6 floatRight">
-            Do not have account?
-            <a href="/dashboard/register_pki">SignUp</a>
           </div>
         </div>
-      </b-card>
-    </div> -->
+      </div>
+      <div class="row">
+        <b-card class="col-md-12" no-body style="padding: 40px">
+          <div class="row">
+            <div class="col-md-12" id="didTable" v-if="showDid">
+              <table class="table">
+                <thead>
+                    <tr>
+                      <th>id</th>
+                      <th>name</th>
+                      <th>did</th>
+                      <th>didDoc</th>
+                    </tr>
+                  </thead>
+                
+                <tbody>
+                  <tr v-for="row in didList" :key="row">
+                     <th scope="row">{{row.id}}</th>
+                    <td>{{row.name}}</td>
+                    <td>{{row.did}}</td>
+                    <td style="word-wrap: break-word;min-width: 160px;max-width: 160px;">{{row.didDoc}}</td>
+                  </tr>
+                </tbody>
+                </table>
+            </div>
+            <div class="col-md-12" id="schemaTable" v-if="showSchema">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>id</th>
+                      <th>credentialName</th>
+                      <th>attributes</th>
+                      <th>version</th>
+                      <th>owner</th>
+                    </tr>
+                  </thead>
+                
+                <tbody>
+                  <tr v-for="row in schemaList" :key="row">
+                    <th scope="row">{{row.id}}</th>
+                    <td>{{row.credentialName}}</td>
+                    <td>{{row.attributes}}</td>
+                    <td>{{row.version}}</td>
+                    <td>{{row.owner}}</td>
+                  </tr>
+                </tbody>
+                </table>
+            </div>
+          </div>
+        </b-card>
+      </div>
+    </div>
   </div>
   <!-- </div> -->
 </template>
@@ -116,7 +116,7 @@
 import { getChallange } from "lds-sdk";
 import QrcodeVue from "qrcode.vue";
 import { sign } from "lds-sdk";
-const {sha256hashStr} = require("../crypto-lib/symmetric");
+const { sha256hashStr } = require("../crypto-lib/symmetric");
 export default {
   name: "Login",
   components: {
@@ -134,30 +134,54 @@ export default {
       credentials: {},
       userData: {},
       proof: "",
+      didList: [],
+      schemaList: [],
+      showDid: true,
+      showSchema: false
     };
   },
-  created(){
-    // const url = `http://${this.host}:5000/api/auth/challenge`;
-    // fetch(url)
-    // .then(res => res.json())
-    // .then(json => {
-    //   if(json.status == 200){
-    //     this.challenge = json.message
-    //   }
-    // })
-    // .catch(e => alert(`Error: ${e.message}`))
+  created() {
+    this.getList("DID")
   },
-  mounted(){
-
-  },
+  mounted() {},
   methods: {
     gotosubpage: (id) => {
       this.$router.push(`${id}`);
     },
+    async getList(type){
+      let url = ""
+      if (type === "DID") {
+          url = `http://${this.host}:5000/api/did/list`;
+        } else {
+          url = `http://${this.host}:5000/api/schema/list`;
+        }
+
+      const resp = await fetch(url)
+      const j = await resp.json()
+      if (j && j.status == 500) {
+        return alert(`Error:  ${j.error}`);
+      }
+
+      if(type == "DID") {
+        this.didList = j.message
+        this.showDid = true
+        this.showSchema = false
+        }
+      else {
+        this.schemaList = j.message
+        this.showDid = false
+        this.showSchema = true
+      }
+
+    },
     async generateProof() {
       this.credentials = JSON.parse(localStorage.getItem("credentials"));
       this.userData = JSON.parse(localStorage.getItem("userData"));
-      if((this.credentials && this.credentials['controller']) != null && (this.userData != null &&  this.userData['@context']) ){
+      if (
+        (this.credentials && this.credentials["controller"]) != null &&
+        this.userData != null &&
+        this.userData["@context"]
+      ) {
         const p = await sign({
           doc: this.userData,
           privateKeyBase58: this.credentials.keys.privateKeyBase58,
@@ -204,53 +228,56 @@ export default {
       }
     },
     async login(type) {
-     try{
-      let url = "";
-      let headers = {
-        "Content-Type": "application/json"
-      }
-      if (type === "PKI") {
-        url = `http://${this.host}:5000/api/auth/login_pki?type=PKI`;
-        headers['x-auth-token'] = this.challenge.JWTChallenge;
-        await this.generateProof();
-      } else {
-        url = `http://${this.host}:5000/api/auth/login`;
-      }
-      const userData = {
-        username: this.username,
-        password: this.password != "" ? sha256hashStr(this.password): this.password,
-        proof: this.proof,
-        controller: this.credentials ? this.credentials.controller: {},
-        publicKey: this.credentials && this.credentials.keys ? this.credentials.keys.publicKey: {},
-        challenge: this.challenge? this.challenge.challenge: "",
-        domain: this.domain,
-      };
-      
-      fetch(url, {
-        body: JSON.stringify(userData),
-        method: "POST",
-        headers: headers,
-      })
-        .then((res) => res.json())
-        .then((j) => {
-          if (j && j.status == 500) {
-            return alert(`Error:  ${j.error}`);
-          }
-          console.log('Validated')
-          localStorage.setItem("authToken", j.message.jwtToken);
-          localStorage.setItem("user", JSON.stringify(j.message.user));
-          if (localStorage.getItem("authToken") != null) {
-            if (this.$route.params.nextUrl != null) {
-              this.$router.push(this.$route.params.nextUrl);
-            } else {
-              this.$router.push("home");
+      try {
+        let url = "";
+        let headers = {
+          "Content-Type": "application/json",
+        };
+        if (type === "PKI") {
+          url = `http://${this.host}:5000/api/auth/login_pki?type=PKI`;
+          headers["x-auth-token"] = this.challenge.JWTChallenge;
+          await this.generateProof();
+        } else {
+          url = `http://${this.host}:5000/api/auth/login`;
+        }
+        const userData = {
+          username: this.username,
+          password:
+            this.password != "" ? sha256hashStr(this.password) : this.password,
+          proof: this.proof,
+          controller: this.credentials ? this.credentials.controller : {},
+          publicKey:
+            this.credentials && this.credentials.keys
+              ? this.credentials.keys.publicKey
+              : {},
+          challenge: this.challenge ? this.challenge.challenge : "",
+          domain: this.domain,
+        };
+
+        fetch(url, {
+          body: JSON.stringify(userData),
+          method: "POST",
+          headers: headers,
+        })
+          .then((res) => res.json())
+          .then((j) => {
+            if (j && j.status == 500) {
+              return alert(`Error:  ${j.error}`);
             }
-          }
-        });
-     }catch(e){
-       alert(`Error: ${e.message}`)
-     }
-      
+            console.log("Validated");
+            localStorage.setItem("authToken", j.message.jwtToken);
+            localStorage.setItem("user", JSON.stringify(j.message.user));
+            if (localStorage.getItem("authToken") != null) {
+              if (this.$route.params.nextUrl != null) {
+                this.$router.push(this.$route.params.nextUrl);
+              } else {
+                this.$router.push("home");
+              }
+            }
+          });
+      } catch (e) {
+        alert(`Error: ${e.message}`);
+      }
     },
   },
 };
