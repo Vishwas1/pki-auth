@@ -32,7 +32,6 @@ const resolve = async (req, res) => {
 
 const list = async (req, res) => {
     try{
-        if(!did) throw new Error('Did is required!')
         const didMethod = new DIDMethod();
         const list = await didMethod.list();
         res.status(200).send({ status: 200, message: list, error: null})
