@@ -58,10 +58,10 @@
         </div>
       </div>
       <div class="row">
-        <b-card class="col-md-12" no-body style="padding: 40px">
+        <div class="col-md-12"   style="padding: 10px">
           <div class="row">
             <div class="col-md-12" id="didTable" v-if="showDid">
-              <table class="table">
+              <table class="table table-bordered">
                 <thead>
                     <tr>
                       <th>id</th>
@@ -70,19 +70,18 @@
                       <th>didDoc</th>
                     </tr>
                   </thead>
-                
                 <tbody>
                   <tr v-for="row in didList" :key="row">
                      <th scope="row">{{row.id}}</th>
                     <td>{{row.name}}</td>
                     <td>{{row.did}}</td>
-                    <td style="word-wrap: break-word;min-width: 160px;max-width: 160px;">{{row.didDoc}}</td>
+                    <td style="word-wrap: break-word;min-width: 300px;max-width: 300px;">{{row.didDoc}}</td>
                   </tr>
                 </tbody>
                 </table>
             </div>
             <div class="col-md-12" id="schemaTable" v-if="showSchema">
-                <table class="table">
+                <table class="table table-bordered">
                   <thead>
                     <tr>
                       <th>id</th>
@@ -105,7 +104,7 @@
                 </table>
             </div>
           </div>
-        </b-card>
+        </div>
       </div>
     </div>
   </div>
@@ -203,7 +202,7 @@ export default {
       link.click();
     },
     async downloadProof() {
-      await this.generateProof();
+      // await this.generateProof();
       this.forceFileDownload(this.proof, "proof.json");
     },
     onFileChange(event) {
