@@ -19,6 +19,8 @@
           style="color:grey; font-style: italic;"
         >DID Explorer for Hypersign Identity Chain!</h6>
         <hr style="opacity: 1.5" />
+        <Navigation></Navigation>
+        <hr style="opacity: 1.5" />
       </div>
     </div>
     <router-view />
@@ -52,3 +54,13 @@
   margin-right: auto;
 }
 </style>
+
+<script>
+import Navigation from './components/Navigation'
+export default {
+  name: 'app',
+  components: {
+    'Navigation': Navigation
+  }
+}
+</script>
