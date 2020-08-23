@@ -7,6 +7,7 @@ import authRoutes from './routes/auth';
 import blogRoutes from './routes/blog';
 import appRoutes  from './routes/app';
 import didRoutes from './routes/did';
+import schemaRoutes from './routes/schema';
 import path from 'path'
 import setupDb from './setup/db.setup';
 const setupArgList = [{
@@ -60,6 +61,7 @@ app.use('/api/app', appRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/blog', blogRoutes)
 app.use('/api/did', didRoutes)
+app.use('/api/schema', schemaRoutes)
 app.get('/', (req, res) => { res.sendFile(path.join(__dirname, '/index.html')) })
 
 app.listen(port, () => logger.info(`The server is running on port ${port}`));

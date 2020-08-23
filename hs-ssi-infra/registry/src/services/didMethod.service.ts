@@ -9,19 +9,26 @@ export default class DIDMethod implements IDID{
     name: string;
     dbSerice: DBService;
     id: string;
+    prefix: string
     constructor(name : string = ""){
         // TODO: check if this name is alreay present in db otherwise throw error
         this.name = name;
         this.did = "";
         this.id = "";
         this.didDoc = "";
+        this.prefix = "did_";
         this.dbSerice = new DBService();
+    }
+
+    private getId(){
+        const uuid = this.prefix + getChallange()
+        return uuid.substring(0, 20)
     }
 
     create = async () => {
         const credential = await getCredential(this.name)
         this.did = credential.controller.id;
-        this.id = this.did;
+        this.id = this.getId();
         this.didDoc = JSON.stringify(credential.controller);
         // TODO: store credentials in db
         await this.dbSerice.add(SchemaType.Did, this);

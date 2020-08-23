@@ -1,5 +1,5 @@
 
-import DIDMethod from '../services/didMethod'
+import DIDMethod from '../services/didMethod.service'
 import { did } from '../config';
 const create = async (req, res) => {
     try{

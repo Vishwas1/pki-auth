@@ -8,13 +8,15 @@ import { chownSync } from 'fs';
 const FieldMap = Object.freeze({
     User: ["id","fname","lname","phoneNumber","username","password","email","publicKey","privateKey","hash","birthdate","jobTitle"],
     Application: ["id","appId","appSecret","isActive", "name", "userId"],
-    Did: ["id","name", "did", "didDoc"]
+    Did: ["id","name", "did", "didDoc"],
+    Schema: ["id", "credentialName", "attributes", "version", "owner"]
 })
 
 export enum SchemaType {
     User,
     Application,
-    Did
+    Did,
+    Schema
 }
 
 enum QueryType{
@@ -52,6 +54,7 @@ export class DBService{
             case SchemaType.User: keysOfModel = FieldMap.User; break;
             case SchemaType.Application: keysOfModel = FieldMap.Application; break;
             case SchemaType.Did: keysOfModel = FieldMap.Did; break;
+            case SchemaType.Schema: keysOfModel = FieldMap.Schema; break;
         }
         return keysOfModel
     }
