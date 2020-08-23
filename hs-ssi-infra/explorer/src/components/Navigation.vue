@@ -19,29 +19,19 @@ export default {
   name: 'Navigation',
   data() {
     return {
-      links: [
-        {
-          id: 0,
-          text: 'Hello World',
-          page:'/HelloWorld'
-        },
-        {
-          id: 1,
-          text: 'Home',
-          page:'/Home'
-        },
-        {
-          id: 2,
-          text: 'About',
-          page:'/About'
-        },
-        {
-          id: 3,
-          text: 'Contact',
-          page:'/Contact'
-        }
-      ]
+      links: []
     }
+  },
+  created() {
+      const history = this.$router.history
+      console.log(history)
+      this.links.push({
+          id: this.links.length + 1,
+          text: history.current.name,
+          page: history.current.path
+      })
+      console.log(this.links)
+
   }
 }
 </script>

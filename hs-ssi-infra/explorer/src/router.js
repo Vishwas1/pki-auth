@@ -10,6 +10,8 @@ import Crypto from './views/Crypto.vue'
 import Home from './views/Home.vue'
 import fetch from 'node-fetch'
 
+import RegisterDid from './views/RegisterDId.vue'
+
 Vue.use(Router)
 
 const router =  new Router({
@@ -17,11 +19,11 @@ const router =  new Router({
   routes: [
     {
       path: '/',
-      redirect: '/dashboard/login'
+      redirect: '/explorer/login'
     },
     {
-      path: '/dashboard',
-      redirect: '/dashboard/login'
+      path: '/explorer',
+      redirect: '/explorer/login'
     },
     {
       path: '/login',
@@ -29,7 +31,12 @@ const router =  new Router({
       component: PKIIdLogin
     },
     {
-      path: '/dashboard/login',
+      path: '/explorer/newdid',
+      name: 'newdid',
+      component: RegisterDid
+    },
+    {
+      path: '/explorer/login',
       name: 'login',
       component: Login
     },

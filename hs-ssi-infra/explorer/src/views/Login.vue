@@ -44,54 +44,61 @@
                 style="margin-left: 2px"
               >Schema</button>
             </div>
-            <div class="col-md-3"></div>
             <div class="col-md-6">
-              <form>
-  <div class="form-group">
-              <input
-                type="text"
-                class="form-control "
-                placeholder="Enter did or schemaId to search"
-              /></div></form>
+              <form class="form-inline" >
+                <div class="form-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter did or schemaId to search"
+                    size="70"
+                  />
+                </div>
+              </form>
+            </div>
+            <div class="col-md-3">
+              <a href="/explorer/newdid" class="floatRight"> Get DID</a>
             </div>
           </div>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12"   style="padding: 10px">
+        <div class="col-md-12" style="padding: 10px">
           <div class="row">
             <div class="col-md-12" id="didTable" v-if="showDid">
               <table class="table table-bordered">
                 <thead>
-                    <tr>
-                      <th>id</th>
-                      <th>name</th>
-                      <th>did</th>
-                      <th>didDoc</th>
-                    </tr>
-                  </thead>
+                  <tr>
+                    <th>id</th>
+                    <th>name</th>
+                    <th>did</th>
+                    <th>didDoc</th>
+                  </tr>
+                </thead>
                 <tbody>
                   <tr v-for="row in didList" :key="row">
-                     <th scope="row">{{row.id}}</th>
+                    <th scope="row">{{row.id}}</th>
                     <td>{{row.name}}</td>
                     <td>{{row.did}}</td>
-                    <td style="word-wrap: break-word;min-width: 300px;max-width: 300px;">{{row.didDoc}}</td>
+                    <td
+                      style="word-wrap: break-word;min-width: 300px;max-width: 300px;"
+                    >{{row.didDoc}}</td>
                   </tr>
                 </tbody>
-                </table>
+              </table>
             </div>
             <div class="col-md-12" id="schemaTable" v-if="showSchema">
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th>id</th>
-                      <th>credentialName</th>
-                      <th>attributes</th>
-                      <th>version</th>
-                      <th>owner</th>
-                    </tr>
-                  </thead>
-                
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>id</th>
+                    <th>credentialName</th>
+                    <th>attributes</th>
+                    <th>version</th>
+                    <th>owner</th>
+                  </tr>
+                </thead>
+
                 <tbody>
                   <tr v-for="row in schemaList" :key="row">
                     <th scope="row">{{row.id}}</th>
@@ -101,7 +108,7 @@
                     <td>{{row.owner}}</td>
                   </tr>
                 </tbody>
-                </table>
+              </table>
             </div>
           </div>
         </div>
@@ -136,42 +143,40 @@ export default {
       didList: [],
       schemaList: [],
       showDid: true,
-      showSchema: false
+      showSchema: false,
     };
   },
   created() {
-    this.getList("DID")
+    this.getList("DID");
   },
   mounted() {},
   methods: {
     gotosubpage: (id) => {
       this.$router.push(`${id}`);
     },
-    async getList(type){
-      let url = ""
+    async getList(type) {
+      let url = "";
       if (type === "DID") {
-          url = `http://${this.host}:5000/api/did/list`;
-        } else {
-          url = `http://${this.host}:5000/api/schema/list`;
-        }
+        url = `http://${this.host}:5000/api/did/list`;
+      } else {
+        url = `http://${this.host}:5000/api/schema/list`;
+      }
 
-      const resp = await fetch(url)
-      const j = await resp.json()
+      const resp = await fetch(url);
+      const j = await resp.json();
       if (j && j.status == 500) {
         return alert(`Error:  ${j.error}`);
       }
 
-      if(type == "DID") {
-        this.didList = j.message
-        this.showDid = true
-        this.showSchema = false
-        }
-      else {
-        this.schemaList = j.message
-        this.showDid = false
-        this.showSchema = true
+      if (type == "DID") {
+        this.didList = j.message;
+        this.showDid = true;
+        this.showSchema = false;
+      } else {
+        this.schemaList = j.message;
+        this.showDid = false;
+        this.showSchema = true;
       }
-
     },
     async generateProof() {
       this.credentials = JSON.parse(localStorage.getItem("credentials"));
