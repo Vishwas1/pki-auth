@@ -100,9 +100,22 @@ const getAppList = async (req: Request, res: Response) => {
     }, error: null})
 }
 
+const getOne = async(req: Request, res: Response) => {
+    console.log(res.locals.data);
+    // const { id } =  res.locals.data;
+    // if(!id) throw new Error('UserId is required!');
+    console.log(req.params.appId)
+    const appObj = new Application({ appId: req.params.appId, userId: "did:hsauth:qwert" });
+    const list = await appObj.fetch()
+
+    // Get list of VCs
+    res.status(200).send({ status: 200, message: list[0], error: null})
+}
+
 export {
     registerApp,
     validateApp,
     login,
-    getAppList
+    getAppList,
+    getOne
 }

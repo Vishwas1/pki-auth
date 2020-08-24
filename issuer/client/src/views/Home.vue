@@ -19,6 +19,10 @@
   float: left;
 }
 
+.floatRight{
+  float: right;
+}
+
 .noBullet{
   list-style-type:none;
 }
@@ -27,6 +31,8 @@
   color: grey;
   font-size: 18px;
 }
+
+
 
 </style>
 
@@ -63,14 +69,20 @@
                   <h3 style="text-align:left">Your Applications</h3>
                   <hr/>
                   <div class="row" >
-                     <div class="col-md-6 floatRight">
-                        <input type="text" placeholder="Enter App Name" size="35" v-model="appName" required>
-                        <button  style="float:right" type="button"
+                     <div class="col-md-8 floatRight">
+                       <form class="form-inline">
+                         <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Enter App Name" size="30" v-model="appName" required>
+                         </div>
+                         <div class="form-group">
+<button  style="float:right; margin-left: 6px" type="button"
                            data-toggle="modal"
                            @click="createApp()"
-                           class="btn btn-outline-primary">+</button>
+                           class="btn btn-outline-primary">Create App</button>
+                         </div>
+                       </form>
                      </div>
-                     <div class="col-md-6 floatRight">
+                     <div class="col-md-4 floatRight">
                      </div>
                   </div>
                   <hr/>
@@ -80,23 +92,29 @@
                            <li class="floatLeft" style="margin-right: 9px;margin-bottom: 9px" v-for="app in appList" :key="app">
                               <div class="card" style="width: 25rem;text-align: left">
                                  <div class="card-body">
-                                    <h5 class="card-title">{{app.name}}</h5>
+                                   <div class="row">
+                                     <div class="col-md-8">
+                                       <h5 class="card-title floatLeft">{{app.name}}</h5>
+                                     </div>
+                                     <div class="col-md-4">
+                                       <a class="btn btn-link floatRight" v-on:click="goToDetailsPage(app.appId)" style="font-weight: bold; padding-right:10px" > > </a>
+                                     </div>
+                                   </div>
+                                    
                                     <hr/>
                                     <p class="card-text" style="padding: 2px;">
-                                    <ul>
-                                       <li>
-                                          <b>App Id: </b>{{app.appId}}
-                                       </li>
-                                       <li>
-                                          <b>App Secret: </b>{{app.appSecret}}
-                                       </li>
-                                       <li>
-                                          <b># of Login: </b><label>12</label>
-                                       </li>
-                                    </ul>
+                                      <ul>
+                                        <li>
+                                            <b>App Id: </b>{{app.appId}}
+                                        </li>
+                                        <li>
+                                            <b>App Secret: </b>{{app.appSecret}}
+                                        </li>
+                                        <li>
+                                            <b># of Login: </b><label>12</label>
+                                        </li>
+                                      </ul>
                                     </p>
-                                    <hr/>
-                                    <a href="#" class="card-link">Card link</a>
                                  </div>
                               </div>
                            </li>
@@ -176,7 +194,7 @@ export default {
       if(this.$route.params.nextUrl != null){
                     this.$router.push(this.$route.params.nextUrl)
                 }else{
-        this.$router.push('login')
+        this.$router.push('/studio/login')
                 }
     },
     createApp(){
@@ -204,6 +222,9 @@ export default {
         }
       })
       .catch(e => alert(`Error: ${e.message}`))
+    },
+    goToDetailsPage: function(id) {
+        this.$router.push("/studio/apps/"+id);
     }
 
   }

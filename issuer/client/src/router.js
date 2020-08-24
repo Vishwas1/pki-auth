@@ -6,6 +6,7 @@ import Register from './views/Register.vue'
 import Register_PKI from './views/Register_pki.vue'
 import Customers from './views/Customers.vue'
 import CustomerDetails from './views/CustomerDetails.vue'
+import AppDetails from './views/AppDetails.vue'
 import Crypto from './views/Crypto.vue'
 import Home from './views/Home.vue'
 import fetch from 'node-fetch'
@@ -54,9 +55,17 @@ const router =  new Router({
       component: CustomerDetails
     },
     {
-      path: '/studio/home',
-      name: 'home',
+      path: '/studio/apps',
+      name: 'apps',
       component: Home,
+      meta: {
+        requiresAuth: true
+      } 
+    },
+    {
+      path: '/studio/apps/:appId',
+      name: 'appdetails',
+      component: AppDetails,
       meta: {
         requiresAuth: true
       } 
