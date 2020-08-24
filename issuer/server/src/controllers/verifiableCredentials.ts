@@ -1,6 +1,6 @@
 import {Request, Response} from 'express'
 import { VerifiableCredentials } from '../services/vc.service';
-import IApplication from '../models/IVerifiableCredentials';
+import IVerifiableCredential from '../models/IVerifiableCredentials';
 import jwt from 'jsonwebtoken';
 import { logger, jwtSecret, jwtExpiryInMilli } from '../config';
 import { getChallange } from 'lds-sdk'
@@ -13,7 +13,7 @@ const issueCredential = async (req: Request, res: Response) => {
         const { subject, schemaId, dataHash, appId } = req.body;
         // TODO: check all the params
         const appObj = new VerifiableCredentials({ subject, schemaId, dataHash, appId, issuer: id});
-        const createdAppInDb: IApplication = JSON.parse(await appObj.create())
+        const createdAppInDb: IVerifiableCredential = JSON.parse(await appObj.create())
         // TODO: issue Vc
         const vc = ""
         res.status(200).send({ status: 200, message: createdAppInDb, error: null})

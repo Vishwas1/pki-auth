@@ -6,6 +6,7 @@ import { port, logger } from './config';
 import authRoutes from './routes/auth';
 import blogRoutes from './routes/blog';
 import appRoutes  from './routes/app';
+import vcRoutes from './routes/verifiableCredentials'
 import path from 'path'
 import setupDb from './setup/db.setup';
 const setupArgList = [{
@@ -58,6 +59,7 @@ app.use(express.static('public'));
 app.use('/api/app', appRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/blog', blogRoutes)
+app.use('/api/credential', vcRoutes)
 app.get('/', (req, res) => { res.sendFile(path.join(__dirname, '/index.html')) })
 
 app.listen(port, () => logger.info(`The server is running on port ${port}`));

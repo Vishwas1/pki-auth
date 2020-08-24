@@ -65,7 +65,6 @@ color: #888b8f;
                 <div class="col-md-6" style="text-align: left">
                     <form class="form" v-if="radioSelected == 'existing'">
                         <div class="form-group">
-                            <!-- <label>Please select schema</label> -->
                             <b-form-select v-model="selected" :options="selectOptions" @change="OnSchemaSelectDropDownChange($event)" size="md" class="mt-3"></b-form-select>    
                         </div>
                     </form>
@@ -80,9 +79,6 @@ color: #888b8f;
                             <a class="btn btn-primary" style="margin-left: 2%; border-radius:30px; color:white" v-on:click="addBlankAttrBox()"> + </a>
                         </div>
                         <div class="form-group" style="max-height:200px;overflow: auto">
-                            <!-- <b-list-group v-for="attr in attributes" :key="attr">
-                                <b-list-group-item button>{{attr}}</b-list-group-item>
-                            </b-list-group> -->
                             <div v-for="attr in attributes" :key="attr">
                                 <div class="sm-tiles">{{attr}} <span>x</span></div>
                             </div>
@@ -110,9 +106,9 @@ color: #888b8f;
                   Fill the form: 
                   <hr/>
                   <form style="max-height:300px; overflow:auto; padding: 5px">
-                    <div class="form-group" v-for="attr in issueCredAttributes" :key="attr">
-                      <label>{{attr}}</label>
-                      <input text="" class="form-control" placeholder="Enter attribute value"/>
+                    <div class="form-group" v-for="attr in issueCredAttributes" :key="attr.name">
+                      <label>{{attr.name}}</label>
+                      <input text="" v-model="attr.value"  class="form-control" placeholder="Enter attribute value"/>
                     </div>
                   </form>
                   <hr/>
@@ -153,6 +149,8 @@ export default {
         { text: "Select existing schema", value: "existing" },
       ],
       selected: null,
+      attributeValues:{},
+      authToken: localStorage.getItem('authToken'),
     selectOptions: [
       {value: null, text: "Please select a schema"}
     ],
@@ -169,6 +167,13 @@ export default {
       vm.prevRoute = from;
     });
   },
+  // computed: {
+  //   issueCredAttributeList:  function() {
+      
+  //     this.schemaMap.forEach()
+  //     return this.issueCredAttributes
+  //   }
+  // },
   methods: {
     fetchSchemas(){
       const url = `http://localhost:5000/api/schema/list`
@@ -219,11 +224,17 @@ export default {
     OnSchemaSelectDropDownChange(event){
         console.log(event)
         if(event){
-          this.issueCredAttributes = this.schemaMap[event] 
+          this.issueCredAttributes = []
+          this.schemaMap[event].forEach(e => {
+            this.issueCredAttributes.push({
+              type: "text",
+              name: e,
+              value: ""
+            })  
+          })
         }else{
           this.issueCredAttributes = []
         }
-        
     },
     async generateCredsDocs() {
       const userData = {
@@ -279,7 +290,14 @@ export default {
             if(j.status === 200){
                 alert('Credential successfull created')
                 this.credentialName = j.message.credentialName
-                this.issueCredAttributes = JSON.parse(j.message.attributes)
+                
+                JSON.parse(j.message.attributes).forEach(e => {
+            this.issueCredAttributes.push({
+              type: "text",
+              name: e,
+              value: ""
+            })  
+          })
                 this.selectOptions.push({
                   value: j.message.id,
                   text: `${j.message.credentialName} | ${j.message.id}`
@@ -290,7 +308,36 @@ export default {
         })
     },
     issueCredential(){
-      
+      console.log(this.issueCredAttributes)
+      const url = "http://localhost:9000/api/credential/issue"
+      const headers = {
+        "Content-Type": "application/json",
+        'x-auth-token': this.authToken
+      }
+      const body = {
+        subject: "did:hs:viskra",
+        schemaId: this.selected,
+        dataHash: JSON.stringify(this.issueCredAttributes),
+        appId: "appI123"
+      }
+
+      console.log(body)
+      console.log(headers)
+
+      fetch(url, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(body)
+      })
+      .then(res => res.json())
+      .then(j => {
+        if(j.status != 200) throw new Error(`Error: ${j.error}`)
+        if(j.status === 200){
+          alert('Credential issued')
+          console.log(j.message)
+        }
+      })
+      .catch(e => alert(`Error: ${e.message}`))
     },
     signup() {
       try {
