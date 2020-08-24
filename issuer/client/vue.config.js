@@ -3,6 +3,6 @@ module.exports = {
     ? '/crypto/'
     : '/',
   devServer: {
-      port: 5001
+      port: 6001
     }
 }

@@ -21,54 +21,24 @@
 .floatRight {
   float: right;
 }
+.title{
+  color: grey
+}
 </style>
 <template>
-  <!-- <div class="home"> -->
   <div class="row">
-    <!-- <div class="col-md-4" style="margin-left: 17%;">
+    <div class="col-md-8" style="margin-left: 17%">
       <b-card no-body style="padding: 40px">
-        <h2>Basic Authentication</h2>
-        <hr />
         <div class="row">
-          <form action="#" class="col-md-12">
-            <div class="form-group">
-              <input type="text" class="form-control" v-model="username" placeholder="Username" />
-            </div>
-            <div class="form-group">
-              <input type="password" class="form-control" v-model="password" placeholder="Password" />
+          <form action="#" class="col-md-6">
+            <div class="form-group"  style="border-right: 1px solid #8080804f;">
+              <qrcode-vue :value="QRCodeValue" :size="200" level="H"></qrcode-vue>
+              <label class="title">Scan the QR code using </br>Hypersign Wallet to authenticate!</label>
             </div>
           </form>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <button
-              type="button"
-              data-toggle="modal"
-              @click="login('BASIC')"
-              class="btn btn-primary floatLeft"
-            >Login</button>
-          </div>
-          <div class="col-md-6 floatRight">
-            Do not have account?
-            <a href="/register">SignUp</a>
-          </div>
-        </div>
-      </b-card>
-    </div> -->
-    <div class="col-md-4" style="margin-left: 34%">
-      <b-card no-body style="padding: 40px">
-        <h2>User Login</h2>
-        <hr />
-        <div class="row">
-          <form action="#" class="col-md-12">
+          <form action="#" class="col-md-6" style="padding:6px">
             <div class="form-group">
-              <qrcode-vue :value="QRCodeValue" :size="200" level="H"></qrcode-vue>
-              <label>Scan this QR code to authenticate!</label>
-            </div>
-            <hr />
-            <h2>Or</h2>
-            <div class="form-group">
-              <label class="floatLeft">Upload User Doc:</label>
+              <label class="floatLeft">Upload DIDDoc:</label>
               <input
                 type="file"
                 class="form-control"
@@ -78,37 +48,30 @@
               />
             </div>
             <div class="form-group">
-              <label class="floatLeft">Upload Credentials:</label>
+              <label class="floatLeft">Upload Keys:</label>
               <input type="file" class="form-control" placeholder @change="onFileChange" />
             </div>
+            <div class="form-group">
+              <button
+                type="button"
+                data-toggle="modal"
+                @click="login()"
+                class="btn btn-primary floatLeft"
+              >Login</button>
+              <!-- <button
+                type="button"
+                data-toggle="modal"
+                @click="downloadProof()"
+                class="btn btn-outline-primary floatLeft"
+              >View Proof</button> -->
+              Do not have account?
+              <a href="http://localhost:5001/explorer/newdid" target="_blank">Create DID</a>
+            </div>
           </form>
-        </div>
-        <div class="row">
-          <div class="col-md-3">
-            <button
-              type="button"
-              data-toggle="modal"
-              @click="downloadProof()"
-              class="btn btn-primary floatLeft"
-            >View Proof</button>
-          </div>
-          <div class="col-md-3">
-            <button
-              type="button"
-              data-toggle="modal"
-              @click="login('PKI')"
-              class="btn btn-primary floatLeft"
-            >Login</button>
-          </div>
-          <div class="col-md-6 floatRight">
-            Do not have account?
-            <a href="/register_pki">SignUp</a>
-          </div>
         </div>
       </b-card>
     </div>
   </div>
-  <!-- </div> -->
 </template>
 
 <script>
@@ -225,7 +188,6 @@ export default {
         challenge: this.challenge? this.challenge.challenge: "",
         domain: this.domain,
       };
-      
       fetch(url, {
         body: JSON.stringify(userData),
         method: "POST",
@@ -236,27 +198,15 @@ export default {
           if (j && j.status == 500) {
             return alert(`Error:  ${j.error}`);
           }
-          
           console.log(this.$route.query)
           console.log(j.message)
           const encryptedUserData = encryptData(this.$route.query.appId, JSON.stringify(j.message.user))
           const redirect_uri = this.$route.query.redirect_uri + '?userData=' + encryptedUserData
           window.location.href = redirect_uri; 
-
-          // localStorage.setItem("authToken", j.message.jwtToken);
-          // localStorage.setItem("user", JSON.stringify(j.message.user));
-          // if (localStorage.getItem("authToken") != null) {
-          //   if (this.$route.params.nextUrl != null) {
-          //     this.$router.push(this.$route.params.nextUrl);
-          //   } else {
-          //     this.$router.push("crypto");
-          //   }
-          // }
         });
      }catch(e){
        alert(`Error: ${e.message}`)
      }
-      
     },
   },
 };

@@ -1,5 +1,5 @@
 import IDID from '../models/IDID';
-import { getChallange, getUserDoc, sign, verify, getCredential} from 'lds-sdk';
+import { getChallange, getUserDoc, sign, verify, getCredential, getDidDocAndKeys} from 'lds-sdk';
 import { DBService, SchemaType } from './db.service';
 
 
@@ -26,16 +26,18 @@ export default class DIDMethod implements IDID{
     }
 
     create = async () => {
-        const credential = await getCredential(this.name)
-        this.did = credential.controller.id;
+        const { keys, didDoc, did } = await getDidDocAndKeys({ name:  this.name})
+         
+        this.did = did;
         this.id = this.getId();
-        this.didDoc = JSON.stringify(credential.controller);
+        this.didDoc = JSON.stringify(didDoc);
+
         // TODO: store credentials in db
         await this.dbSerice.add(SchemaType.Did, this);
         return {
-            keys: credential.keys,
+            keys,
             did: this.did,
-            didDoc: credential.controller
+            didDoc: didDoc
         }
     }
 

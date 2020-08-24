@@ -17,7 +17,7 @@
         <h6
           class="leftAlign"
           style="color:grey; font-style: italic;"
-        >DID Explorer for Hypersign Identity Chain!</h6>
+        >DID Explorer for Hypersign Identity network!</h6>
         <hr style="opacity: 1.5" />
         <Navigation></Navigation>
         <hr style="opacity: 1.5" />

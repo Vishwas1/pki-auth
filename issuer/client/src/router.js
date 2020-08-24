@@ -17,24 +17,24 @@ const router =  new Router({
   routes: [
     {
       path: '/',
-      redirect: '/dashboard/login'
+      redirect: '/studio/login'
     },
     {
-      path: '/dashboard',
-      redirect: '/dashboard/login'
+      path: '/studio',
+      redirect: '/studio/login'
     },
     {
-      path: '/login',
+      path: '/studio/login',
       name: 'PKIIdLogin',
       component: PKIIdLogin
     },
     {
-      path: '/dashboard/login',
+      path: '/login',
       name: 'login',
       component: Login
     },
     {
-      path: '/dashboard/register',
+      path: '/studio/register',
       name: 'register',
       component: Register
     },
