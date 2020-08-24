@@ -19,7 +19,7 @@
     "bs58check": "^2.1.2",
     "ed2curve": "^0.3.0",
     "gh-pages": "^1.2.0",
-    "lds-sdk": "^2.0.0",
+    "lds-sdk": "^3.0.0",
     "mdbvue": "^6.7.1",
     "nacl-signature": "^2.0.3",
     "node-fetch": "^2.6.0",

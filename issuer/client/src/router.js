@@ -54,7 +54,7 @@ const router =  new Router({
       component: CustomerDetails
     },
     {
-      path: '/dashboard/home',
+      path: '/studio/home',
       name: 'home',
       component: Home,
       meta: {

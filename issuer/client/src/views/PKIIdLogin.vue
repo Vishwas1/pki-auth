@@ -33,7 +33,7 @@
           <form action="#" class="col-md-6">
             <div class="form-group"  style="border-right: 1px solid #8080804f;">
               <qrcode-vue :value="QRCodeValue" :size="200" level="H"></qrcode-vue>
-              <label class="title">Scan the QR code using </br>Hypersign Wallet to authenticate!</label>
+              <label class="title">Scan the QR code using Hypersign Wallet to authenticate!</label>
             </div>
           </form>
           <form action="#" class="col-md-6" style="padding:6px">
@@ -55,15 +55,15 @@
               <button
                 type="button"
                 data-toggle="modal"
-                @click="login()"
+                @click="login('PKI')"
                 class="btn btn-primary floatLeft"
               >Login</button>
-              <!-- <button
+              <button
                 type="button"
                 data-toggle="modal"
                 @click="downloadProof()"
                 class="btn btn-outline-primary floatLeft"
-              >View Proof</button> -->
+              >View Proof</button>
               Do not have account?
               <a href="http://localhost:5001/explorer/newdid" target="_blank">Create DID</a>
             </div>
@@ -75,7 +75,6 @@
 </template>
 
 <script>
-import { getChallange } from "lds-sdk";
 import QrcodeVue from "qrcode.vue";
 import { sign } from "lds-sdk";
 import { encryptData } from '../crypto-lib/symmetric'
@@ -100,10 +99,12 @@ export default {
     };
   },
   created(){
-    const url = `http://${this.host}:5000/api/auth/challenge`;
+    const url = `http://${this.host}:9000/api/auth/challenge`;
+    console.log(url)
     fetch(url)
     .then(res => res.json())
     .then(json => {
+      console.log(json);
       if(json.status == 200){
         this.challenge = json.message
       }
@@ -119,18 +120,20 @@ export default {
     },
     async generateProof() {
       this.credentials = JSON.parse(localStorage.getItem("credentials"));
+      console.log(this.credentials);
       this.userData = JSON.parse(localStorage.getItem("userData"));
-      if((this.credentials && this.credentials['controller']) != null && (this.userData != null &&  this.userData['@context']) ){
+      console.log(this.userData);
+      if((this.credentials && this.credentials['privateKeyBase58']) != null && (this.userData != null &&  this.userData['@context']) ){
         const p = await sign({
           doc: this.userData,
-          privateKeyBase58: this.credentials.keys.privateKeyBase58,
-          publicKey: this.credentials.keys.publicKey,
+          privateKeyBase58: this.credentials.privateKeyBase58,
+          publicKey: this.credentials.publicKey,
           challenge: this.challenge.challenge,
           domain: this.domain,
         });
         this.proof = JSON.stringify(p);
       } else {
-        throw new Error("Both files are needed for generating proof");
+        throw new Error("Error: Both files are needed for generating proof");
       }
     },
     forceFileDownload(data, fileName) {
@@ -142,18 +145,22 @@ export default {
       link.click();
     },
     async downloadProof() {
-      await this.generateProof();
-      this.forceFileDownload(this.proof, "proof.json");
+      try{
+        await this.generateProof();
+        this.forceFileDownload(this.proof, "proof.json");
+      }catch(e){
+        alert(e.message)
+      }
     },
     onFileChange(event) {
       try {
         const file = event.target.files[0];
         const reader = new FileReader();
         reader.onload = readSuccess;
-        function readSuccess(evt) {
+        function readSuccess (evt) {
           const fileJSON = JSON.parse(evt.target.result);
           if (!fileJSON) throw new Error("Incorrect file");
-          if (fileJSON["controller"]) {
+          if (fileJSON["privateKeyBase58"]) {
             localStorage.setItem("credentials", JSON.stringify(fileJSON));
           } else if (fileJSON["@context"]) {
             localStorage.setItem("userData", JSON.stringify(fileJSON));
@@ -167,24 +174,23 @@ export default {
       }
     },
     async login(type) {
+      
      try{
       let url = "";
       let headers = {
         "Content-Type": "application/json"
       }
       if (type === "PKI") {
-        url = `http://${this.host}:5000/api/auth/login_pki?type=PKI`;
+        url = `http://${this.host}:9000/api/auth/login_pki?type=PKI`;
         headers['x-auth-token'] = this.challenge.JWTChallenge;
         await this.generateProof();
       } else {
-        url = `http://${this.host}:5000/api/auth/login`;
+        url = `http://${this.host}:9000/api/auth/login`;
       }
       const userData = {
         username: this.username,
-        password: this.password != "" ? sha256hashStr(this.password): this.password,
+        password: this.password != " " ? sha256hashStr(this.password): this.password,
         proof: this.proof,
-        controller: this.credentials ? this.credentials.controller: {},
-        publicKey: this.credentials && this.credentials.keys ? this.credentials.keys.publicKey: {},
         challenge: this.challenge? this.challenge.challenge: "",
         domain: this.domain,
       };
@@ -198,11 +204,21 @@ export default {
           if (j && j.status == 500) {
             return alert(`Error:  ${j.error}`);
           }
-          console.log(this.$route.query)
+          
           console.log(j.message)
-          const encryptedUserData = encryptData(this.$route.query.appId, JSON.stringify(j.message.user))
-          const redirect_uri = this.$route.query.redirect_uri + '?userData=' + encryptedUserData
-          window.location.href = redirect_uri; 
+
+          localStorage.setItem("authToken", j.message.jwtToken);
+          localStorage.setItem("user", JSON.stringify(j.message.user));
+          if (localStorage.getItem("authToken") != null) {
+            if (this.$route.params.nextUrl != null) {
+              this.$router.push(this.$route.params.nextUrl);
+            } else {
+              this.$router.push("home");
+            }
+          }
+          //const encryptedUserData = encryptData(this.$route.query.appId, JSON.stringify(j.message.user))
+          //const redirect_uri = this.$route.query.redirect_uri + '?userData=' + encryptedUserData
+          //window.location.href = redirect_uri; 
         });
      }catch(e){
        alert(`Error: ${e.message}`)

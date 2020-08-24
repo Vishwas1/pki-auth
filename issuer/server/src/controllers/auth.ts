@@ -5,6 +5,7 @@ import { logger, jwtSecret, jwtExpiryInMilli } from '../config'
 import jwt from 'jsonwebtoken';
 import { getChallange, verify } from 'lds-sdk'
 const  {sha256hashStr} = require('../../../client/src/crypto-lib/symmetric.js')
+import fetch from 'node-fetch'
 
 const check = (req: Request, res: Response) => {
     const param = {
@@ -45,7 +46,7 @@ const login = async (req: Request, res: Response) => {
         let x: IUser = {} as any;
         let userInDb: IUser = {} as any;
         let userData: IUser = {} as any;
-        let { username, password, proof, controller, challenge, publicKey, domain } = req.body;
+        let { username, password, proof, publicKey, domain } = req.body;
 
         // Basic authenticatoin
         if(!loginType){
@@ -62,28 +63,39 @@ const login = async (req: Request, res: Response) => {
         // PKI Authentcatoin: Verify the signature
         if(loginType == 'PKI'){
             
-            if(!proof || !controller || !publicKey  || !domain) throw new Error('proof, controller, publicKey, challenge, domain is empty')
+            if(!proof || !domain) throw new Error('proof, controller, publicKey, challenge, domain is empty')
             proof = JSON.parse(proof)
             logger.debug(`Before verifying the proof, ch = ${challengeExtractedFromChToken}`)
-            const res = await verify({doc: proof, publicKey: publicKey, challenge: challengeExtractedFromChToken, domain, controller: controller })
+            const res = await verify({doc: proof, challenge: challengeExtractedFromChToken, domain })
             logger.debug(`After verifying the proof, res = ${JSON.stringify(res)}`)
             if(res.verified == true){
                 logger.debug('Proof verified')
+                const id  = proof['id']
                 delete proof['proof']
-                const userObj = new User({...proof,fname: proof.name, publicKey: publicKey.publicKeyBase58})    
-                const userindbstr  = await userObj.fetch()
-                if(!userindbstr) throw new Error(`Invalid user. Please register to login`)
-                userInDb = JSON.parse(userindbstr)
-                const generatedHash = sha256hashStr(JSON.stringify(proof))
-                if(generatedHash != userInDb.hash) throw new Error("Unauthorized: User's hash did not match.")
-                userData = proof
+                // TODO:
+                //      verify the did   
+                //      Call http://localhost:5000/api/did/resolve?did=${id} to resolve the did
+                const res= await fetch(`http://localhost:5000/api/did/resolve?did=${id}`)
+                const j = await res.json()
+                //Check if the didDoc matches with the didDoc passed here if not throw error    
+                if(JSON.stringify(j.message) === JSON.stringify(proof)){
+                    const userObj = new User({...proof, username: proof['id'], id: proof['id'],fname: proof.name, publicKey: proof['publicKey'][0].id}) 
+                    userData = {
+                        id: userObj.id,
+                        publicKey: userObj.publicKey,
+                        fname: userObj.fname,
+                        username: userObj.username,
+                        email: userObj.email
+                    }
+                }else{
+                    throw new Error("Invalid didDoc.")
+                }
             }else{
                 logger.debug('Proof could not verified')
                 throw new Error("Unauthorized: Proof can not be verified!")
             }
         }
 
-        // Generating Authorization token
         jwt.sign(
             userData, 
             jwtSecret, 
@@ -107,6 +119,7 @@ const recover = (req: Request, res: Response) => {
 }
 
 const getNewChallenge = (req: Request, res: Response) => {
+    console.log('In the challenge api')
     const challenge = getChallange();
     jwt.sign(
         {challenge}, 
