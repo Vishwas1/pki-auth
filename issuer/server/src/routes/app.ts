@@ -8,7 +8,7 @@ const router = Router()
 router.post('/register',  verifyAuth, appCtrl.registerApp)
 router.post('/oauth', appCtrl.validateApp)
 router.post('/login', verifyAuth, appCtrl.login)
-// router.post('/list', verifyAuth, appCtrl.getAppList)
+router.get('/:appId', appCtrl.getOne);
 router.post('/list',  verifyAuth, appCtrl.getAppList)
 export default router
 

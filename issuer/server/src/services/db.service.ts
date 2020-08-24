@@ -6,12 +6,15 @@ import { db, logger } from '../config'
 
 const FieldMap = Object.freeze({
     User: ["id","fname","lname","phoneNumber","username","password","email","publicKey","privateKey","hash","birthdate","jobTitle"],
-    Application: ["id","appId","appSecret","isActive", "name", "userId"]
+    Application: ["id","appId","appSecret","isActive", "name", "userId"],
+    VerifiableCredential: ["id",    "subject",    "issuer",    "schemaId",    "dataHash"]
 })
 
+    
 export enum SchemaType {
     User,
-    Application
+    Application,
+    VerifiableCredential
 }
 
 enum QueryType{
@@ -48,6 +51,7 @@ export class DBService{
         switch(type){
             case SchemaType.User: keysOfModel = FieldMap.User; break;
             case SchemaType.Application: keysOfModel = FieldMap.Application; break;
+            case SchemaType.VerifiableCredential: keysOfModel = FieldMap.VerifiableCredential; break;
         }
         return keysOfModel
     }
