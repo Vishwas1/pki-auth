@@ -102,10 +102,11 @@ const getAppList = async (req: Request, res: Response) => {
 
 const getOne = async(req: Request, res: Response) => {
     console.log(res.locals.data);
-    // const { id } =  res.locals.data;
-    // if(!id) throw new Error('UserId is required!');
+    const { id } =  res.locals.data;
+    if(!id) throw new Error('UserId is required!');
     console.log(req.params.appId)
-    const appObj = new Application({ appId: req.params.appId, userId: "did:hsauth:qwert" });
+    console.log({userID: id})
+    const appObj = new Application({ appId: req.params.appId, userId: id });
     const list = await appObj.fetch()
 
     // Get list of VCs

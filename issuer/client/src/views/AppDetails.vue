@@ -155,7 +155,11 @@ export default {
     if (this.$route.params.appId) {
       const url = `http://localhost:9000/api/app/${this.$route.params.appId}`;
       console.log(url);
-      fetch(url)
+      
+      fetch(url,{
+        method: "GET",
+        headers: {'x-auth-token': this.authToken}
+      })
         .then((res) => res.json())
         .then((j) => {
           this.appDetails = j.message;
@@ -166,7 +170,9 @@ export default {
       console.error("Param id is not defined");
     }
   },
-  created() {},
+  created() {
+    this.authToken = localStorage.getItem('authToken');
+  },
   data() {
     return {
       appDetails: {},
