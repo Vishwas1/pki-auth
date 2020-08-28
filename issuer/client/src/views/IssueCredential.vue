@@ -114,8 +114,15 @@ color: #888b8f;
                   <hr/>
                   <button class="btn btn-outline-primary" @click="issueCredential()">Issue Credential</button>
               </div>
-              <div class="col-md-6">
-                
+              <div class="col-md-6" style="padding: 30px" v-if="isCredentialIssued">
+                  <div class="form-group"  style="text-align:center">
+                    <qrcode-vue :value="signedVerifiableCredential" :size="200" level="H"></qrcode-vue>
+                    <label class="title">Scan the QR code using Hypersign Wallet to authenticate!</label>
+                  </div>
+                  <div class="form-group" style="text-align:center">
+                    <p><h5>OR</h5>
+                    <button class="btn btn-link" @click="downloadCredentials()">Download Credential</button>
+                  </div>
               </div>
             </div>
          </div>
@@ -127,12 +134,12 @@ color: #888b8f;
 
 <script>
 import fetch from "node-fetch";
-import { getUserDoc, getCredential } from "lds-sdk";
-
+import { generateCredential, signCredential } from "lds-sdk/dist/vc";
+import QrcodeVue from "qrcode.vue";
 const { sha256hashStr } = require("../crypto-lib/symmetric");
 export default {
   name: "IssueCredential",
-  components: {},
+  components: {QrcodeVue},
   data() {
     return {
       active: 0,
@@ -144,6 +151,10 @@ export default {
       issueCredAttributes: [],
       radioSelected: "create",
       credentialName: "",
+      isCredentialIssued:  false,
+      signedVerifiableCredential: "",
+      credentials: JSON.parse(localStorage.getItem("credentials")),
+      subjectDid: "did:hs:AmitKumar",
       radioOptions: [
         { text: "Create new schema", value: "create" },
         { text: "Select existing schema", value: "existing" },
@@ -167,13 +178,6 @@ export default {
       vm.prevRoute = from;
     });
   },
-  // computed: {
-  //   issueCredAttributeList:  function() {
-      
-  //     this.schemaMap.forEach()
-  //     return this.issueCredAttributes
-  //   }
-  // },
   methods: {
     fetchSchemas(){
       const url = `http://localhost:5000/api/schema/list`
@@ -220,6 +224,7 @@ export default {
         this.attributes = []
         this.issueCredAttributes = []
         this.selected = null
+        this.credentialName = ""
     },
     OnSchemaSelectDropDownChange(event){
         console.log(event)
@@ -235,21 +240,7 @@ export default {
         }else{
           this.issueCredAttributes = []
         }
-    },
-    async generateCredsDocs() {
-      const userData = {
-        name: this.fullName,
-        email: this.email,
-        telephone: this.phoneNumber,
-        birthdate: this.birthdate,
-        jobTitle: this.jobTitle,
-      };
-      const userDoc = await getUserDoc(userData);
-      this.userData = JSON.stringify(userDoc);
-
-      const creds = await getCredential(this.fullName);
-      this.credentials = JSON.stringify(creds);
-    },
+    },    
     forceFileDownload(data, fileName) {
       const url = window.URL.createObjectURL(new Blob([data]));
       const link = document.createElement("a");
@@ -259,10 +250,7 @@ export default {
       link.click();
     },
     downloadCredentials() {
-      this.forceFileDownload(this.credentials, "keys.json");
-    },
-    downloadUserDoc() {
-      this.forceFileDownload(this.userData, "didDoc.json");
+      this.forceFileDownload(JSON.stringify(this.signedVerifiableCredential), "vc.json");
     },
     createSchema(){
         console.log(this.credentialName)
@@ -291,38 +279,75 @@ export default {
                 alert('Credential successfull created')
                 this.credentialName = j.message.credentialName
                 
-                JSON.parse(j.message.attributes).forEach(e => {
-            this.issueCredAttributes.push({
-              type: "text",
-              name: e,
-              value: ""
-            })  
-          })
+                // JSON.parse(j.message.attributes).forEach(e => {
+                //     this.issueCredAttributes.push({
+                //       type: "text",
+                //       name: e,
+                //       value: ""
+                //     })  
+                //  })
+               this.schemaMap[j.message.id] = this.attributes
                 this.selectOptions.push({
                   value: j.message.id,
                   text: `${j.message.credentialName} | ${j.message.id}`
                 })
+                this.radioSelected = "existing"
             }else{
                 alert(`Error: ${j.error}`)
             }
         })
     },
-    issueCredential(){
+    generateAttributeMap(){
+      let attributesMap = []
+      if(this.issueCredAttributes.length > 0){
+        this.issueCredAttributes.forEach(e => {
+          attributesMap[e.name] = e.value;
+        })
+      }
+
+      return attributesMap;
+    },
+
+    getCredentials (attributesMap){
+      const schemaUrl = `http://localhost:5000/api/schema/get/${this.selected}`
+        return generateCredential(schemaUrl, {
+            subjectDid: this.subjectDid,
+            issuerDid: this.credentials.publicKey.id,
+            expirationDate: new Date().toISOString(),
+            attributesMap
+        }).then(signedCred => {
+          return signedCred;
+        })
+    },
+
+    signCredentials(credential){
+      return signCredential(credential, this.credentials)
+      .then(signedCredential => {
+        return signedCredential
+      })
+    },
+    async issueCredential(){
       console.log(this.issueCredAttributes)
+      // generateAttributeMap
+
+      const attributeMap = await this.generateAttributeMap()
+
+      const verifiableCredential = await this.getCredentials(attributeMap)
+      // signCredentials
+      const signedVerifiableCredential = await this.signCredentials(verifiableCredential)
+      this.signedVerifiableCredential = signedVerifiableCredential
+      
       const url = "http://localhost:9000/api/credential/issue"
       const headers = {
         "Content-Type": "application/json",
         'x-auth-token': this.authToken
       }
       const body = {
-        subject: "did:hs:viskra",
+        subject: this.subjectDid,
         schemaId: this.selected,
-        dataHash: JSON.stringify(this.issueCredAttributes),
+        dataHash: signedVerifiableCredential,
         appId: "appI123"
       }
-
-      console.log(body)
-      console.log(headers)
 
       fetch(url, {
         method: "POST",
@@ -333,33 +358,14 @@ export default {
       .then(j => {
         if(j.status != 200) throw new Error(`Error: ${j.error}`)
         if(j.status === 200){
-          alert('Credential issued')
+          console.log('Credential issued')
           console.log(j.message)
+          this.isCredentialIssued = true;
+          this.onSchemaOptionChange(null)
+          this.radioSelected = "create"
         }
       })
       .catch(e => alert(`Error: ${e.message}`))
-    },
-    signup() {
-      try {
-        if (this.fullName == " ") return alert("Alias is required!");
-        const url = `http://${this.host}:5000/api/did/create?name=${this.fullName}`;
-        fetch(url)
-          .then((res) => res.json())
-          .then((j) => {
-            if (j && j.status == 500) {
-              return alert(`Error:  ${j.error}`);
-            }
-            this.credentials = JSON.stringify(j.message.keys);
-            this.userData = JSON.stringify(j.message.didDoc);
-            this.downloadCredentials();
-            this.downloadUserDoc();
-            alert(
-              "Did Successfully created. You can check on explorer. Please keep your keys safe"
-            );
-          });
-      } catch (e) {
-        alert(e);
-      }
     },
   },
 };
