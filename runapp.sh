@@ -13,11 +13,11 @@ cd -
 cd hs-ssi-infra/explorer 
 nohup npm run serve  > ../../$LOG/explorer.log &
 cd -
-cd issuer/server
-nohup npm run dev > ../../$LOG/issuer_server.log &
+cd studio/server
+nohup npm run dev > ../../$LOG/studio_server.log &
 cd -
-cd issuer/client
-nohup npm run serve > ../../$LOG/issuer_client.log &
+cd studio/client
+nohup npm run serve > ../../$LOG/studio_client.log &
 #pm2 start src/app.ts --
 #pm2 start index.js --name provider -- -port $PROIVER_PORT
 # cd -
