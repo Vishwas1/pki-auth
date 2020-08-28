@@ -57,7 +57,10 @@
               </form>
             </div>
             <div class="col-md-3">
-              <a href="/explorer/newdid" class="floatRight"> Get DID</a>
+              <div class="form-group">
+                <a href="/explorer/newdid" style="margin-left:55%" class="floatLeft">Get DID</a> 
+                <a href="http://localhost:9001/" target="_blank" class="floatRight">Studio</a>
+              </div>
             </div>
           </div>
         </div>
