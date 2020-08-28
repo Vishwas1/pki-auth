@@ -10,7 +10,7 @@ export class VerifiableCredentials implements IVerifiableCredential{
     dbSerice: DBService;
     prefix: string;
     appId: string;
-    constructor({ subject = " ", id= "", issuer = " ", schemaId= " ", dataHash = " ", appId= " "}){
+    constructor({ subject = "", id= "", issuer = "", schemaId= "", dataHash = "", appId= ""}){
         this.id = id;
         this.subject = subject; 
         this.issuer =  issuer;
@@ -37,13 +37,15 @@ export class VerifiableCredentials implements IVerifiableCredential{
     }
 
     async fetch(){
+        console.log(this)
         // delete this['dbSerice']
         const props = Object.getOwnPropertyNames(this);
         let queryParams = {};
         props.forEach(e => {
             if(e == 'dbSerice') return;
             if(e == 'prefix') return;
-            if(this[e] != " " && !this[e]) queryParams[e] = this[e]
+            console.log(this[e])
+            if(this[e] != "" && this[e]) queryParams[e] = this[e]
         })
         console.log(queryParams)
         let users = await this.dbSerice.getAll(SchemaType.VerifiableCredential, queryParams);

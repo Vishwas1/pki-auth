@@ -4,7 +4,7 @@ import verifyAuth from '../middleware/auth'
 
 const router = Router()
 router.post('/issue',  verifyAuth, appCtrl.issueCredential)
-router.post('/list',  verifyAuth, appCtrl.getCredentialList)
+router.get('/list',  verifyAuth, appCtrl.getCredentialList)
 export default router
 
 

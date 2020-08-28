@@ -178,7 +178,6 @@ export default {
       appDetails: {},
       vcList: [],
       schemaList: [],
-      vcList: [],
       showSchema: true,
       showVc: false,
       credIssueUri: ""
@@ -193,22 +192,42 @@ export default {
     },
     async getList(type) {
       let url = "";
+      let options = {}
+      if(type === "SCHEMA"){
+        url = `http://localhost:5000/api/schema/list`;
+        options  = {
+          method: "GET"
+        }
+      }else{
+        url = `http://localhost:9000/api/credential/list`;
 
-      url = `http://localhost:5000/api/schema/list`;
-      const resp = await fetch(url);
+        options  = {
+          method: "GET",
+          headers: {'x-auth-token': this.authToken}
+        }
+      }
+      
+      const resp = await fetch(url, options);
       const j = await resp.json();
       if (j && j.status == 500) {
         return alert(`Error:  ${j.error}`);
       }
+      if(type === "SCHEMA"){
+        this.schemaList = j.message;
+        this.schemaList = this.schemaList.filter(
+          (x) => x.owner == this.appDetails.userId
+        ); //.map(x => x.attributes = JSON.parse(x.attributes))
 
-      this.schemaList = j.message;
-      this.schemaList = this.schemaList.filter(
-        (x) => x.owner == this.appDetails.userId
-      ); //.map(x => x.attributes = JSON.parse(x.attributes))
-
-      console.log(this.schemaList);
-      this.showVc = false;
-      this.showSchema = true;
+        console.log(this.schemaList);
+        this.showVc = false;
+        this.showSchema = true;
+      }else{
+        this.vcList = j.message.list;
+        console.log(this.vcList);
+        this.showVc = true;
+        this.showSchema = false;
+      }
+      
     },
   },
 };
