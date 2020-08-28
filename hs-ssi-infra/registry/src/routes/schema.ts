@@ -13,6 +13,8 @@ router.post('/update', didCtrl.update)
 // GET:  /api/did/resolve?did=
 router.get('/get', didCtrl.get)
 
+router.get('/get/:schemaId', didCtrl.getRaw)
+
 router.get('/list', didCtrl.list)
 
 export default router

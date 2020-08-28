@@ -9,7 +9,7 @@ const FieldMap = Object.freeze({
     User: ["id","fname","lname","phoneNumber","username","password","email","publicKey","privateKey","hash","birthdate","jobTitle"],
     Application: ["id","appId","appSecret","isActive", "name", "userId"],
     Did: ["id","name", "did", "didDoc"],
-    Schema: ["id", "credentialName", "attributes", "version", "owner"]
+    Schema: ["id", "credentialName", "attributes", "version", "owner", "raw", "description"]
 })
 
 export enum SchemaType {
@@ -137,7 +137,7 @@ export class DBService{
 
     getOne(type: SchemaType, params):Promise<any>{
         return new Promise((resolve, reject) => {
-            logger.info('Method: Get: schema type is ' + SchemaType[type])
+            logger.info('Method: GetOne: schema type is ' + SchemaType[type])
             const cols = Object.keys(params)
             let query = this.getQuery(QueryType.GetRows, type) + ' WHERE '; // gET * from User 
             cols.forEach((v, i)=> {
@@ -156,11 +156,13 @@ export class DBService{
 
     getAll(type: SchemaType, params: Object):Promise<Array<Object>>{
         return new Promise((resolve, reject) => {
-            logger.info('Method: Get: schema type is ' + SchemaType[type])
+            logger.info('Method: GetAll: schema type is ' + SchemaType[type])
             let query = this.getQuery(QueryType.GetRows, type)
             let values: Array<String> = [];
             let cols = Object.keys(params)
-            console.log(params)
+            logger.debug('.............................')
+            logger.debug(cols)
+            logger.debug(params)
             if(cols.length > 0){
                 query  = query + ' WHERE '; // gET * from User 
                 cols.forEach((v, i)=> {
