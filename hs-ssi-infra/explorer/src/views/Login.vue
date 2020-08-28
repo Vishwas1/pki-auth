@@ -101,7 +101,7 @@
 
                 <tbody>
                   <tr v-for="row in schemaList" :key="row">
-                    <th scope="row">{{row.id}}</th>
+                    <th scope="row"><a :href="'http://localhost:5000/api/schema/get/'+row.id" target="_blank">{{row.id}}</a></th>
                     <td>{{row.credentialName}}</td>
                     <td>{{row.attributes}}</td>
                     <td>{{row.version}}</td>
