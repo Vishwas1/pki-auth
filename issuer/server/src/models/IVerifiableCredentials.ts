@@ -5,5 +5,6 @@ export default interface IVerifiableCredential{
     schemaId: string; //
     dataHash: string; // sha3
     appId: string; // organization
+    // type: Array<string>; //AlumniCredential | BirthCertificates etc.
 }
 

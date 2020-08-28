@@ -21,9 +21,9 @@ export class VerifiableCredentials implements IVerifiableCredential{
         this.prefix = 'vc_';
     }
 
-    toString(user: IVerifiableCredential){
-        return JSON.stringify(user);
-    }
+    // toString(user: IVerifiableCredential){
+    //     return JSON.stringify(user);
+    // }
 
     private getId(){
         const uuid = this.prefix + getChallange()
@@ -33,7 +33,7 @@ export class VerifiableCredentials implements IVerifiableCredential{
     async create(){
         this.id = this.getId();
         const newUser:IVerifiableCredential = await this.dbSerice.add(SchemaType.VerifiableCredential, this);
-        return this.toString(newUser)
+        return JSON.stringify(newUser)
     }
 
     async fetch(){
