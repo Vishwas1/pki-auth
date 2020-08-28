@@ -10,6 +10,11 @@
 .floatRight {
   float: right;
 }
+.buttonClicked{
+  background:white;
+  font-weight: bold;
+  border: 1px solid #80808091;
+}
 </style>
 
 <template>
@@ -44,18 +49,24 @@
         <div class="col-md-8">
           <div class="row">
             <div class="col-md-12">
-              <div class="row">
+              <div class="row" style="background: #b5bbc63b none repeat scroll 0% 0%;
+margin-top: 2px;
+padding: 10px 10px 0px 10px;
+border: 1px solid #8080803b;
+border-radius: 3px;">
                 <div class="col-md-4">
                   <button
                     type="button"
                     data-toggle="modal"
                     @click="getList('DID')"
+                    v-bind:class="{ buttonClicked: showVc }"
                     class="btn btn-link floatLeft"
                   >Credential</button>
                   <button
                     type="button"
                     data-toggle="modal"
                     @click="getList('SCHEMA')"
+                    v-bind:class="{ buttonClicked: showSchema }"
                     class="btn btn-link floatLeft"
                     style="margin-left: 1px"
                   >Schema</button>
@@ -69,7 +80,7 @@
                   />
                 </div>
                 <div class="col-md-3">
-                  <a @click="goToCreateIssuePage()"  class="btn btn-link floatRight">ISSUE</a>
+                  <button @click="goToCreateIssuePage()"  class="btn btn-link floatRight">Issue</button>
                   <!-- <b-button class="floatRight" v-b-modal.modal-lg variant="link">ISSUE</b-button>
                   <b-modal id="modal-lg" size="lg" title="Create Credential">
                     <div class="row">
