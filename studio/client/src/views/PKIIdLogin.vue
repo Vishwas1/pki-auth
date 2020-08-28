@@ -213,7 +213,7 @@ export default {
             if (this.$route.params.nextUrl != null) {
               this.$router.push(this.$route.params.nextUrl);
             } else {
-              this.$router.push("apps");
+              this.$router.push("dashboard");
             }
           }
           //const encryptedUserData = encryptData(this.$route.query.appId, JSON.stringify(j.message.user))

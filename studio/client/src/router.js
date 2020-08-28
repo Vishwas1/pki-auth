@@ -1,15 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from './views/Login.vue'
 import PKIIdLogin from './views/PKIIdLogin.vue'
-import Register from './views/Register.vue'
-import Register_PKI from './views/Register_pki.vue'
-import Customers from './views/Customers.vue'
-import CustomerDetails from './views/CustomerDetails.vue'
 import AppDetails from './views/AppDetails.vue'
 import IssueCredential from './views/IssueCredential.vue'
-import Crypto from './views/Crypto.vue'
-import Home from './views/Home.vue'
+import Dashboard from './views/Dashboard.vue'
 import fetch from 'node-fetch'
 
 Vue.use(Router)
@@ -31,34 +25,9 @@ const router =  new Router({
       component: PKIIdLogin
     },
     {
-      path: '/login',
-      name: 'login',
-      component: Login
-    },
-    {
-      path: '/studio/register',
-      name: 'register',
-      component: Register
-    },
-    {
-      path: '/register_pki',
-      name: 'register_pki',
-      component: Register_PKI
-    },
-    {
-      path: '/customers',
-      name: 'customers',
-      component: Customers
-    },
-    {
-      path: '/customerdetails/:id',
-      name: 'customerdetails',
-      component: CustomerDetails
-    },
-    {
-      path: '/studio/apps',
-      name: 'apps',
-      component: Home,
+      path: '/studio/dashboard',
+      name: 'dashboard',
+      component: Dashboard,
       meta: {
         requiresAuth: true
       } 
@@ -96,7 +65,7 @@ router.beforeEach((to, from, next) => {
       .then(json => {
         if(json.status == 403){
           next({
-            path: '/dashboard/login',
+            path: '/studio/login',
             params: { nextUrl:  to.fullPath}
           })  
         }else{
@@ -105,7 +74,7 @@ router.beforeEach((to, from, next) => {
       })
       .catch((e)=> {
         next({
-          path: '/dashboard/login',
+          path: '/studio/login',
           params: { nextUrl:  to.fullPath}
         })
       })
