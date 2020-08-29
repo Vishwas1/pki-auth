@@ -73,23 +73,28 @@ export default {
       menu: [
         { 
           name: "Dashboard",  
-          path: "/dashboard"
+          path: "/studio/dashboard",
+          isShow: true,
         },
         { 
           name: "Schema",  
-          path: "/schema"
+          path: "/studio/schema",
+          isShow: true,
         },
         { 
           name: "Credentials",  
-          path: "/credentials"
+          path: "/studio/credentials",
+          isShow: true,
         },
         { 
           name: "Profile",  
-          path: "/profile"
+          path: "/studio/profile",
+          isShow: true,
         },
         {
           name: "Logout",
-          path: ""
+          path: "/studio/login",
+          isShow: true,
         },
       ]
     }
@@ -100,15 +105,16 @@ export default {
       localStorage.removeItem('user')
       localStorage.removeItem("credentials")
       localStorage.removeItem("userData")
-      
+    },
+    goToNextPage(route){
+      const r = this.menu.find(x => x.name === route)
+      if(r.name === "Logout") this.logout()
+      this.$router.push(r.path)
       if(this.$route.params.nextUrl != null){
                     this.$router.push(this.$route.params.nextUrl)
                 }else{
-        this.$router.push('/studio/login')
+        this.$router.push(r.path)
                 }
-    },
-    goToNextPage(route){
-      console.log(route)
     }
   }
 }

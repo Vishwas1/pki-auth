@@ -67,7 +67,7 @@
                           <div class="card-body">
                             <div class="row">
                               <div class="col-md-8">
-                                <h5 class="card-title floatLeft"><b>{{app.name}}</b></h5>
+                                <h5 class="card-title floatLeft"><b><a :href="'/studio/apps/'+app.appId">{{app.name}}</a></b></h5>
                               </div>
                               <div class="col-md-4">
                                 <a class="btn btn-link floatRight" v-on:click="goToDetailsPage(app.appId)" style="font-weight: bold; padding-right:10px" > > </a>
@@ -78,7 +78,7 @@
                               <div class="col-md-8">
                                 <ul>
                                 <li>
-                                    <b>App Id: </b><a :href="'/studio/apps/'+app.appId">{{app.appId}}</a>
+                                    <b>App Id: </b>{{app.appId}}
                                 </li>
                                 <li>
                                     <b>App Secret: </b>{{app.appSecret}}
