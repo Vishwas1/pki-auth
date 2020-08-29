@@ -4,6 +4,7 @@ import PKIIdLogin from './views/PKIIdLogin.vue'
 import AppDetails from './views/AppDetails.vue'
 import IssueCredential from './views/IssueCredential.vue'
 import Dashboard from './views/Dashboard.vue'
+import Profile from './views/Profile.vue'
 import fetch from 'node-fetch'
 
 Vue.use(Router)
@@ -28,6 +29,14 @@ const router =  new Router({
       path: '/studio/dashboard',
       name: 'dashboard',
       component: Dashboard,
+      meta: {
+        requiresAuth: true
+      } 
+    },
+    {
+      path: '/studio/profile',
+      name: 'profile',
+      component: Profile,
       meta: {
         requiresAuth: true
       } 
