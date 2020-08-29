@@ -39,35 +39,11 @@
 
 <template>
    <div class="home">
-      <div class="col-md-8 centeralign">
-         <div class="row">
-            <div class="col-md-6" >
-               <h3 style="float:left">Admin Dashboard</h3>
-            </div>
-            <div class="col-md-6" >
-               <!-- <h5 style="float:left">Welcome {{user.email}}! </h5> -->
-               <button  style="float:right" type="button"
-                  data-toggle="modal"
-                  @click="logout()"
-                  class="btn btn-outline-primary">Logout</button>
-            </div>
-         </div>
-         <div class="row" style="margin-top: 2%">
-            <div class="col-md-4">
-               <div class="card">
-                  <img src="https://cdn1.iconfinder.com/data/icons/female-avatars-vol-1/256/female-portrait-avatar-profile-woman-sexy-afro-2-512.png" alt="John" style="width:100%;" >
-                  <h2>{{user.fname}}</h2>
-                  <p class="title">{{user.id}}</p>
-                  <p class="title" v-if="user.email != ' '">{{user.email}}</p>
-                  <p class="title" v-if="user.phoneNumber != ' '">{{user.phoneNumber}}</p>
-                  <p class="title" v-if="user.publicKey != ' '">{{user.publicKey}}</p>
-                  <p class="title"> {{user.username}}</p>
-               </div>
-            </div>
-            <div class="col-md-8">
-               <b-card no-body style="padding: 20px">
-                  <h3 style="text-align:left">Your Applications</h3>
-                  <hr/>
+      <div class="col-md-9 centeralign">
+         <div class="row" style="margin-top: 0%">
+            <div class="col-md-12">
+               <!-- <b-card no-body style="padding: 20px"> -->
+                  <!-- <hr/> -->
                   <div class="row" >
                      <div class="col-md-8 floatRight">
                        <form class="form-inline">
@@ -75,7 +51,7 @@
                         <input type="text" class="form-control" placeholder="Enter App Name" size="30" v-model="appName" required>
                          </div>
                          <div class="form-group">
-<button  style="float:right; margin-left: 6px" type="button"
+                          <button  style="float:right; margin-left: 6px" type="button"
                            data-toggle="modal"
                            @click="createApp()"
                            class="btn btn-outline-primary">Create App</button>
@@ -85,43 +61,42 @@
                      <div class="col-md-4 floatRight">
                      </div>
                   </div>
-                  <hr/>
-                  <div class="row" style="max-height: 621px;overflow: auto;">
-                     <div class="col-md-12">
-                        <ul class="noBullet">
-                           <li class="floatLeft" style="margin-right: 9px;margin-bottom: 9px" v-for="app in appList" :key="app">
-                              <div class="card" style="width: 25rem;text-align: left">
-                                 <div class="card-body">
-                                   <div class="row">
-                                     <div class="col-md-8">
-                                       <h5 class="card-title floatLeft">{{app.name}}</h5>
-                                     </div>
-                                     <div class="col-md-4">
-                                       <a class="btn btn-link floatRight" v-on:click="goToDetailsPage(app.appId)" style="font-weight: bold; padding-right:10px" > > </a>
-                                     </div>
-                                   </div>
-                                    
-                                    <hr/>
-                                    <p class="card-text" style="padding: 2px;">
-                                      <ul>
-                                        <li>
-                                            <b>App Id: </b>{{app.appId}}
-                                        </li>
-                                        <li>
-                                            <b>App Secret: </b>{{app.appSecret}}
-                                        </li>
-                                        <li>
-                                            <b># of Login: </b><label>12</label>
-                                        </li>
-                                      </ul>
-                                    </p>
-                                 </div>
+                  <div class="row" style="margin-top: 1%;max-height: 621px;overflow: auto;">
+                     <div class="col-md-6"  v-for="app in appList" :key="app">
+                       <div class="card floatLeft" style="width: 40rem;text-align: left; margin-top:2%">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-md-8">
+                                <h5 class="card-title floatLeft"><b>{{app.name}}</b></h5>
                               </div>
-                           </li>
-                        </ul>
+                              <div class="col-md-4">
+                                <a class="btn btn-link floatRight" v-on:click="goToDetailsPage(app.appId)" style="font-weight: bold; padding-right:10px" > > </a>
+                              </div>
+                            </div>
+                            <hr/>
+                            <div class="row card-text" style="padding: 2px;">
+                              <div class="col-md-8">
+                                <ul>
+                                <li>
+                                    <b>App Id: </b><a :href="'/studio/apps/'+app.appId">{{app.appId}}</a>
+                                </li>
+                                <li>
+                                    <b>App Secret: </b>{{app.appSecret}}
+                                </li>
+                                <li>
+                                    <b># of issued credentials: </b><label>12</label>
+                                </li>
+                              </ul>
+                              </div>
+                              <div class="col-md-4">
+                                <img src="https://cdn0.iconfinder.com/data/icons/web-development-47/64/feature-application-program-custom-512.png" alt="John" style="opacity: 0.5;width:70%;height: 100%;" >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                      </div>
                   </div>
-               </b-card>
+               <!-- </b-card> -->
             </div>
          </div>
       </div>
