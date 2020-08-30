@@ -27,6 +27,11 @@
 </style>
 <template>
   <div class="row">
+    <loading :active.sync="isLoading" 
+        :can-cancel="true" 
+        :on-cancel="onCancel"
+        :is-full-page="fullPage"></loading>
+
     <div class="col-md-8" style="margin-left: 17%">
       <b-card no-body style="padding: 40px">
         <div class="row">
@@ -58,12 +63,12 @@
                 @click="login('PKI')"
                 class="btn btn-primary floatLeft"
               >Login</button>
-              <button
+              <!-- <button
                 type="button"
                 data-toggle="modal"
                 @click="downloadProof()"
                 class="btn btn-outline-primary floatLeft"
-              >View Proof</button>
+              >View Proof</button> -->
               Do not have account?
               <a href="http://localhost:5001/explorer/newdid" target="_blank">Create DID</a>
             </div>
@@ -77,12 +82,15 @@
 <script>
 import QrcodeVue from "qrcode.vue";
 import { sign } from "lds-sdk";
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 import { encryptData } from '../crypto-lib/symmetric'
 const {sha256hashStr} = require("../crypto-lib/symmetric");
 export default {
   name: "Login",
   components: {
     QrcodeVue,
+    Loading
   },
   data() {
     return {
@@ -96,6 +104,8 @@ export default {
       credentials: {},
       userData: {},
       proof: "",
+      fullPage: true,
+      isLoading: false
     };
   },
   created(){
@@ -109,12 +119,28 @@ export default {
         this.challenge = json.message
       }
     })
-    .catch(e => alert(`Error: ${e.message}`))
+    .catch(e => this.notifyErr(`Error: ${e.message}`))
   },
   mounted(){
 
   },
   methods: {
+    notifySuccess(msg){
+      this.$notify({
+          group: 'foo',
+          title: 'Information',
+          type: 'success',
+          text: msg
+        });
+    },
+    notifyErr(msg){
+      this.$notify({
+          group: 'foo',
+          title: 'Error',
+          type: 'error',
+          text: msg
+        });
+    },
     gotosubpage: (id) => {
       this.$router.push(`${id}`);
     },
@@ -149,7 +175,7 @@ export default {
         await this.generateProof();
         this.forceFileDownload(this.proof, "proof.json");
       }catch(e){
-        alert(e.message)
+        this.notifyErr(e.message)
       }
     },
     onFileChange(event) {
@@ -170,12 +196,13 @@ export default {
         }
         reader.readAsText(file);
       } catch (e) {
-        alert(`Error: ${e.message}`);
+        this.notifyErr(`Error: ${e.message}`);
       }
     },
     async login(type) {
       
      try{
+      this.isLoading = true;
       let url = "";
       let headers = {
         "Content-Type": "application/json"
@@ -201,8 +228,9 @@ export default {
       })
         .then((res) => res.json())
         .then((j) => {
+          this.isLoading = false;
           if (j && j.status == 500) {
-            return alert(`Error:  ${j.error}`);
+            return this.notifyErr(`Error:  ${j.error}`);
           }
           
           console.log(j.message)
@@ -221,7 +249,8 @@ export default {
           //window.location.href = redirect_uri; 
         });
      }catch(e){
-       alert(`Error: ${e.message}`)
+       this.isLoading = false;
+       this.notifyErr(`Error: ${e.message}`)
      }
     },
   },

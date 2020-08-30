@@ -50,6 +50,11 @@ color: #888b8f;
 </style>
 <template>
   <div class="home marginLeft marginRight">
+    <loading :active.sync="isLoading" 
+        :can-cancel="true" 
+        :on-cancel="onCancel"
+        :is-full-page="fullPage"></loading>
+
     <div class="row">
       <div class="col-md-12" style="text-align: left">
         <div class="card">
@@ -192,6 +197,8 @@ export default {
       schemaMap: {},
       schemaList: [],
       credentialDescription: "",
+      fullPage: true,
+      isLoading: false
     };
   },
   created() {
@@ -289,6 +296,8 @@ export default {
       );
     },
     createSchema() {
+        
+      this.isLoading = true
       if (this.credentialName == "")
         return this.notifyErr("Error: SchemaName can not be blank");
       if (this.attributes.length == 0)
@@ -317,7 +326,9 @@ export default {
               ...j.message,
             });
             this.schemaMap[j.message.id] = this.attributes;
+            this.isLoading = false
           } else {
+            this.isLoading = false
             this.notifyErr(`Error: ${j.error}`);
           }
         });

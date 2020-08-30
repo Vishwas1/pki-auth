@@ -30,6 +30,11 @@
 </style>
 <template>
   <div class="home marginLeft marginRight">
+    <loading :active.sync="isLoading" 
+        :can-cancel="true" 
+        :on-cancel="onCancel"
+        :is-full-page="fullPage"></loading>
+
     <div class="row">
       <div class="col-md-12" style="text-align: left">
         <div class="card">
@@ -145,7 +150,9 @@ export default {
       selectOptions: [{ value: null, text: "Please select a schema" }],
       schemaMap: {},
       vcList : [],
-      schemaList: []
+      schemaList: [],
+      fullPage: true,
+      isLoading: false
     };
   },
   created() {
@@ -299,6 +306,7 @@ export default {
       );
     },
     async issueCredential() {  
+      this.isLoading = true
       // generateAttributeMap
       const attributeMap = await this.generateAttributeMap();
 
@@ -328,6 +336,7 @@ export default {
       })
         .then((res) => res.json())
         .then((j) => {
+          
           if (j.status != 200) throw new Error(`Error: ${j.error}`);
           if (j.status === 200) {
             this.isCredentialIssued = true;
@@ -335,10 +344,14 @@ export default {
             this.vcList.push({
               ...j.message
             })
+            this.isLoading = false
             this.notifySuccess("Credential successfully issued")
           }
         })
-        .catch((e) => this.notifyErr(`Error: ${e.message}`));
+        .catch((e) => {
+          this.notifyErr(`Error: ${e.message}`)
+          this.isLoading = false
+        });
     },
   },
 };
