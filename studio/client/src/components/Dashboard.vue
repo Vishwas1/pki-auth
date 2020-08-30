@@ -50,44 +50,36 @@
   background: aliceblue;
   border-bottom: 1px solid #8080802b;
 }
+
+.fVal{
+  font-size: small;
+color: gray;
+word-wrap: break-word
+}
+
 </style>
 <template>
-  <div class="home">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="row">
-          <div class="col-md-6" style="margin-left:40%;">
-            <div class="card">
+    <div class="row" style="padding:10px">
+      <div class="col-md-6" style="margin-left:40%">
+          <div class="card">
               <div class="card-header">
-                NETWORK STATUS <span class="dot" v-if="networkStatus.status == 'LIVE'"></span>
+                Network Details <span class="dot" v-if="networkStatus.status == 'LIVE'"></span>
               </div>
               <div class="card-body leftAlign">
-                <p>Status: {{networkStatus.status}}</p>  
-                <p>NodeUrl: <a :href="networkStatus.nodeUrl" target="_blank">{{networkStatus.nodeUrl}}</a></p>  
-                <p>ExplorerUrl: <a :href="networkStatus.explorerUrl" target="_blank">{{networkStatus.explorerUrl}}</a></p> 
+                <p >NETWORK
+                </p><p class="fVal">Hypersign Staging Network</p>  
+                <p>NODE URL
+                </p><p class="fVal"><a :href="networkStatus.nodeUrl" target="_blank">{{networkStatus.nodeUrl}}</a></p>  
+                <p>EXPLORER URL
+                </p><p class="fVal"><a :href="networkStatus.explorerUrl" target="_blank">{{networkStatus.explorerUrl}}</a></p> 
+                <p>DID COUNT
+                </p><p class="fVal">{{networkStatus.didCount}}</p>  
+                <p>SCHEMA COUNT
+                </p><p class="fVal">{{networkStatus.schemaCount}}</p>  
               </div>
             </div> 
-          </div>
         </div>
       </div>
-      <div class="col-md-6">
-          <div class="row">
-              <div class="col-md-4">
-                <div class="card">
-                  <div class="card-body tile">{{networkStatus.schemaCount}}</div>
-                  <div class="card-header">Schema</div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card ">
-                  <div class="card-body tile">{{networkStatus.didCount}}</div>
-                  <div class="card-header">DID</div>
-                </div>
-              </div>
-          </div> 
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>
@@ -110,12 +102,10 @@ export default {
     };
   },
   created() {
-    const url = `http://${location.hostname}:5000/network/info`;
+    const url = `http://localhost:5000/network/info`;
     fetch(url)
     .then(res => res.json())
     .then(json => {
-      json.schemaCount = 123
-      json.didCount = 1230
       this.networkStatus = { ...json }
       console.log(this.networkStatus)
     })

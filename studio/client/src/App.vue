@@ -90,11 +90,6 @@ export default {
           path: "/studio/credential",
           isShow: true,
         },
-        { 
-          name: "Profile",  
-          path: "/studio/profile",
-          isShow: true,
-        },
         {
           name: "Logout",
           path: "/studio/login",

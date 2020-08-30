@@ -216,15 +216,6 @@ export default {
             this.schemaList = this.schemaList.filter(
               (x) => x.owner === this.user.id
             );
-            // this.schemaList.forEach(s => {
-            //   if(s.owner != this.user.id) return
-            //   this.schemaMap[s.id] = JSON.parse(s.attributes)
-            //   this.selectOptions.push({
-            //     value: s.id,
-            //     text: `${s.credentialName} | ${s.id}`
-            //   })
-            // });
-            // console.log(this.schemaMap)
           }
         })
         .catch((e) => alert(`Error: ${e.message}`));
