@@ -160,6 +160,22 @@ export default {
     });
   },
   methods: {
+    notifySuccess(msg){
+      this.$notify({
+          group: 'foo',
+          title: 'Information',
+          type: 'success',
+          text: msg
+        });
+    },
+    notifyErr(msg){
+      this.$notify({
+          group: 'foo',
+          title: 'Error',
+          type: 'error',
+          text: msg
+        });
+    },
     async getList(type) {
       let url = "";
       let options = {}
@@ -170,7 +186,6 @@ export default {
         }
       }else{
         url = `http://localhost:9000/api/credential/list`;
-
         options  = {
           method: "GET",
           headers: {'x-auth-token': this.authToken}
@@ -180,7 +195,7 @@ export default {
       const resp = await fetch(url, options);
       const j = await resp.json();
       if (j && j.status == 500) {
-        return alert(`Error:  ${j.error}`);
+        return this.notifyErr(`Error:  ${j.error}`);
       }
       if(type === "SCHEMA"){
         const schemaList = j.message
@@ -193,11 +208,9 @@ export default {
               text: `${s.credentialName} | ${s.id}`
             })
           });
-          console.log(this.schemaMap)
         }
       }else{
         this.vcList = j.message.list;
-        console.log(this.vcList);
       }
     },
     fetchData(url, option) {
@@ -207,13 +220,12 @@ export default {
           if (j.status != 200) throw new Error(j.error);
           return j.message;
         })
-        .catch((e) => alert(`Error: ${e.message}`));
+        .catch((e) => this.notifyErr(`Error: ${e.message}`));
     },
     gotosubpage: (id) => {
       this.$router.push(`${id}`);
     },
     addBlankAttrBox() {
-      console.log(this.attributes);
       if (this.attributeName != " ") {
         this.attributes.push(this.attributeName);
         this.attributeName = " ";
@@ -239,8 +251,6 @@ export default {
             value: "",
           });
         });
-
-        console.log(this.issueCredAttributes)
       } else {
         this.issueCredAttributes = [];
       }
@@ -266,7 +276,6 @@ export default {
           attributesMap[e.name] = e.value;
         });
       }
-
       return attributesMap;
     },
 
@@ -289,10 +298,8 @@ export default {
         }
       );
     },
-    async issueCredential() {
-      console.log(this.issueCredAttributes);
+    async issueCredential() {  
       // generateAttributeMap
-
       const attributeMap = await this.generateAttributeMap();
 
       const verifiableCredential = await this.getCredentials(attributeMap);
@@ -323,16 +330,15 @@ export default {
         .then((j) => {
           if (j.status != 200) throw new Error(`Error: ${j.error}`);
           if (j.status === 200) {
-            console.log("Credential issued");
-            console.log(j.message);
             this.isCredentialIssued = true;
             this.onSchemaOptionChange(null);
             this.vcList.push({
               ...j.message
             })
+            this.notifySuccess("Credential successfully issued")
           }
         })
-        .catch((e) => alert(`Error: ${e.message}`));
+        .catch((e) => this.notifyErr(`Error: ${e.message}`));
     },
   },
 };

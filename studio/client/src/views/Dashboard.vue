@@ -75,9 +75,6 @@ export default {
     this.user = JSON.parse(usrStr);
     console.log(this.user)
     this.userKeys = Object.keys(this.user)
-
-    // const authToken = localStorage.getItem('authToken')
-
     const url = `http://${location.hostname}:9000/api/app/list`;
     fetch(url,{
         headers: {
@@ -89,12 +86,27 @@ export default {
     .then(json => {
       if(json.status == 200){
         this.appList = json.message.list
-        console.log(this.appList)
       }
     })
-    .catch(e => alert(`Error: ${e.message}`))
+    .catch(e => this.notifyErr(`${e.message}`))
   },
   methods: {
+    notifySuccess(msg){
+      this.$notify({
+          group: 'foo',
+          title: 'Information',
+          type: 'success',
+          text: msg
+        });
+    },
+    notifyErr(msg){
+      this.$notify({
+          group: 'foo',
+          title: 'Error',
+          type: 'error',
+          text: msg
+        });
+    },
     gotosubpage: id => {
       this.$router.push(`${id}`);
     },
@@ -111,13 +123,11 @@ export default {
                 }
     },
     createApp(){
-      if(!this.appName) alert('AppName can not be blank')
+      if(!this.appName) this.notifyErr('AppName can not be blank')
       const url = `http://${location.hostname}:9000/api/app/register`;
-      console.log(this.appName)
       const appData = {
         name: this.appName
       }
-      console.log(appData)
       fetch(url,{
           body: JSON.stringify(appData),
           method: 'POST',
@@ -131,10 +141,12 @@ export default {
       .then(json => {
         if(json.status == 200){
           this.appList.push(json.message)
-          console.log(json.message.appId)
+          this.notifySuccess("App successfully created")
         }
       })
-      .catch(e => alert(`Error: ${e.message}`))
+      .catch(e => {
+        this.notifyErr(e.message)
+      })
     },
     goToDetailsPage: function(id) {
         this.$router.push("/studio/apps/"+id);

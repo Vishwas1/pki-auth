@@ -205,6 +205,22 @@ export default {
     });
   },
   methods: {
+    notifySuccess(msg){
+        this.$notify({
+          group: 'foo',
+          title: 'Information',
+          type: 'success',
+          text: msg
+        });
+    },
+    notifyErr(msg){
+      this.$notify({
+          group: 'foo',
+          title: 'Error',
+          type: 'error',
+          text: msg
+        });
+    },
     fetchSchemas() {
       const url = `http://localhost:5000/api/schema/list`;
       fetch(url)
@@ -218,7 +234,7 @@ export default {
             );
           }
         })
-        .catch((e) => alert(`Error: ${e.message}`));
+        .catch((e) => this.notifyErr(`Error: ${e.message}`));
     },
     fetchData(url, option) {
       fetch(url)
@@ -227,27 +243,24 @@ export default {
           if (j.status != 200) throw new Error(j.error);
           return j.message;
         })
-        .catch((e) => alert(`Error: ${e.message}`));
+        .catch((e) => this.notifyErr(`Error: ${e.message}`));
     },
     gotosubpage: (id) => {
       this.$router.push(`${id}`);
     },
     addBlankAttrBox() {
-      console.log(this.attributes);
       if (this.attributeName != " ") {
         this.attributes.push(this.attributeName);
         this.attributeName = " ";
       }
     },
     onSchemaOptionChange(event) {
-      console.log(event);
       this.attributes = [];
       this.issueCredAttributes = [];
       this.selected = null;
       this.credentialName = "";
     },
     OnSchemaSelectDropDownChange(event) {
-      console.log(event);
       if (event) {
         this.issueCredAttributes = [];
         this.schemaMap[event].forEach((e) => {
@@ -276,14 +289,10 @@ export default {
       );
     },
     createSchema() {
-      console.log(this.credentialName);
       if (this.credentialName == "")
-        return alert("Error: SchemaName can not be blank");
+        return this.notifyErr("Error: SchemaName can not be blank");
       if (this.attributes.length == 0)
-        return alert("Error: Atleast one attribute is requreeid");
-      console.log("Inside created schema");
-      console.log(this.user);
-
+        return this.notifyErr("Error: Atleast one attribute is requreeid");
       const url = `http://localhost:5000/api/schema/create`;
       const schemaData = {
         name: this.credentialName,
@@ -294,7 +303,6 @@ export default {
       let headers = {
         "Content-Type": "application/json",
       };
-      console.log(schemaData);
       fetch(url, {
         method: "POST",
         body: JSON.stringify(schemaData),
@@ -303,101 +311,16 @@ export default {
         .then((res) => res.json())
         .then((j) => {
           if (j.status === 200) {
-            alert("Credential successfull created");
+            this.notifySuccess("Credential successfull created");
             this.credentialName = j.message.credentialName;
-
-            // JSON.parse(j.message.attributes).forEach(e => {
-            //     this.issueCredAttributes.push({
-            //       type: "text",
-            //       name: e,
-            //       value: ""
-            //     })
-            //  })
             this.schemaList.push({
               ...j.message,
             });
             this.schemaMap[j.message.id] = this.attributes;
-            // this.selectOptions.push({
-            //   value: j.message.id,
-            //   text: `${j.message.credentialName} | ${j.message.id}`
-            // })
           } else {
-            alert(`Error: ${j.error}`);
+            this.notifyErr(`Error: ${j.error}`);
           }
         });
-    },
-    generateAttributeMap() {
-      let attributesMap = [];
-      if (this.issueCredAttributes.length > 0) {
-        this.issueCredAttributes.forEach((e) => {
-          attributesMap[e.name] = e.value;
-        });
-      }
-
-      return attributesMap;
-    },
-
-    getCredentials(attributesMap) {
-      const schemaUrl = `http://localhost:5000/api/schema/get/${this.selected}`;
-      return generateCredential(schemaUrl, {
-        subjectDid: this.subjectDid,
-        issuerDid: this.credentials.publicKey.id,
-        expirationDate: new Date().toISOString(),
-        attributesMap,
-      }).then((signedCred) => {
-        return signedCred;
-      });
-    },
-
-    signCredentials(credential) {
-      return signCredential(credential, this.credentials).then(
-        (signedCredential) => {
-          return signedCredential;
-        }
-      );
-    },
-    async issueCredential() {
-      console.log(this.issueCredAttributes);
-      // generateAttributeMap
-
-      const attributeMap = await this.generateAttributeMap();
-
-      const verifiableCredential = await this.getCredentials(attributeMap);
-      // signCredentials
-      const signedVerifiableCredential = await this.signCredentials(
-        verifiableCredential
-      );
-      this.signedVerifiableCredential = signedVerifiableCredential;
-
-      const url = "http://localhost:9000/api/credential/issue";
-      const headers = {
-        "Content-Type": "application/json",
-        "x-auth-token": this.authToken,
-      };
-      const body = {
-        subject: this.subjectDid,
-        schemaId: this.selected,
-        dataHash: signedVerifiableCredential,
-        appId: "appI123",
-      };
-
-      fetch(url, {
-        method: "POST",
-        headers,
-        body: JSON.stringify(body),
-      })
-        .then((res) => res.json())
-        .then((j) => {
-          if (j.status != 200) throw new Error(`Error: ${j.error}`);
-          if (j.status === 200) {
-            console.log("Credential issued");
-            console.log(j.message);
-            this.isCredentialIssued = true;
-            this.onSchemaOptionChange(null);
-            this.radioSelected = "create";
-          }
-        })
-        .catch((e) => alert(`Error: ${e.message}`));
     },
   },
 };

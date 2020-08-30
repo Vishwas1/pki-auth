@@ -23,6 +23,7 @@
       </div>
     </div>
     <router-view />
+    <notifications group="foo" />
   </div>
 </template>
 
