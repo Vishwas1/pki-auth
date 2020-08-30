@@ -57,14 +57,13 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
-
+app.get('/', infoRoutes)
 app.use('/api/app', appRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/blog', blogRoutes)
 app.use('/api/did', didRoutes)
 app.use('/api/schema', schemaRoutes)
 app.use('/network/info', infoRoutes)
-app.get('/', (req, res) => { res.sendFile(path.join(__dirname, '/index.html')) })
 
 app.listen(port, () => logger.info(`The server is running on port ${port}`));
 

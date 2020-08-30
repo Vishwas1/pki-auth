@@ -7,6 +7,15 @@
 .leftAlign {
   text-align: left;
 }
+
+.marginLeft
+{
+margin-left: 13%
+}
+.marginRight
+{
+margin-right: 12%
+}
 </style>
 <template>
   <div id="app">
