@@ -32,33 +32,55 @@
   font-size: 18px;
 }
 
+
+
 </style>
+
+
 <template>
-   <div class="home marginRight marginLeft">
-     <h3 class="leftAlign">Welcome, {{user.id}} !</h3>
-     <div class="row">
-      <div class="col-md-6">
-          <Profile/>
+   <div class="home">
+      <div class="col-md-8 marginLeft">
+         <div class="row" style="margin-top: 2%">
+            <div class="col-md-8">
+                 <ul class="leftAlign">
+                   <li class="form-group">
+                     <label class="title">UserId: </label>
+                     <label class=""> {{user.id}}</label>
+                   </li>
+                   <li class="form-group">
+                     <label class="title">Email: </label>
+                     <label class="">{{user.email}}</label>
+                   </li>
+                   <li class="form-group">
+                     <label class="title">Phone Number: </label>
+                     <label class=""> {{user.phoneNumber}}</label>
+                   </li>
+                   <li class="form-group">
+                     <label class="title">PublicKey: </label>
+                     <label class="">{{user.publicKey}}</label>
+                   </li>
+                   <li class="form-group">
+                     <label class="title">Network: </label>
+                     <label class=""><a href="http://localhost:5001/" target="_blank">HS-Staging</a></label>
+                   </li>
+                 </ul>
+            </div>
+            <div class="col-md-4 centeralign">
+              <img src="https://cdn1.iconfinder.com/data/icons/female-avatars-vol-1/256/female-portrait-avatar-profile-woman-sexy-afro-2-512.png" alt="John" style="width:100%;height: 53%;" >
+              <h2>{{user.fname}}</h2>
+            </div>
+         </div>
       </div>
-      <div class="col-md-6">
-        <Dashboard/>
-      </div>
-     </div>    
    </div>
 </template>
 
 
 <script>
-import Dashboard from '@/components/Dashboard.vue'
-import Profile from '@/components/Profile.vue'
 export default {
-  name: "PanelPage",
+  name: "Profile",
   mounted() {
   },
-  components: { 
-    Dashboard,
-    Profile
-  },
+  components: { },
   data() {
     return {
       active: 0,
@@ -75,6 +97,9 @@ export default {
     this.user = JSON.parse(usrStr);
     console.log(this.user)
     this.userKeys = Object.keys(this.user)
+
+    // const authToken = localStorage.getItem('authToken')
+
     const url = `http://${location.hostname}:9000/api/app/list`;
     fetch(url,{
         headers: {
@@ -86,27 +111,12 @@ export default {
     .then(json => {
       if(json.status == 200){
         this.appList = json.message.list
+        console.log(this.appList)
       }
     })
-    .catch(e => this.notifyErr(`${e.message}`))
+    .catch(e => alert(`Error: ${e.message}`))
   },
   methods: {
-    notifySuccess(msg){
-      this.$notify({
-          group: 'foo',
-          title: 'Information',
-          type: 'success',
-          text: msg
-        });
-    },
-    notifyErr(msg){
-      this.$notify({
-          group: 'foo',
-          title: 'Error',
-          type: 'error',
-          text: msg
-        });
-    },
     gotosubpage: id => {
       this.$router.push(`${id}`);
     },
@@ -123,11 +133,13 @@ export default {
                 }
     },
     createApp(){
-      if(!this.appName) this.notifyErr('AppName can not be blank')
+      if(!this.appName) alert('AppName can not be blank')
       const url = `http://${location.hostname}:9000/api/app/register`;
+      console.log(this.appName)
       const appData = {
         name: this.appName
       }
+      console.log(appData)
       fetch(url,{
           body: JSON.stringify(appData),
           method: 'POST',
@@ -141,12 +153,10 @@ export default {
       .then(json => {
         if(json.status == 200){
           this.appList.push(json.message)
-          this.notifySuccess("App successfully created")
+          console.log(json.message.appId)
         }
       })
-      .catch(e => {
-        this.notifyErr(e.message)
-      })
+      .catch(e => alert(`Error: ${e.message}`))
     },
     goToDetailsPage: function(id) {
         this.$router.push("/studio/apps/"+id);

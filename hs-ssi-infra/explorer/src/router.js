@@ -4,11 +4,9 @@ import Login from './views/Login.vue'
 import PKIIdLogin from './views/PKIIdLogin.vue'
 import Register from './views/Register.vue'
 import Register_PKI from './views/Register_pki.vue'
-import Customers from './views/Customers.vue'
-import CustomerDetails from './views/CustomerDetails.vue'
-import Crypto from './views/Crypto.vue'
 import Home from './views/Home.vue'
 import fetch from 'node-fetch'
+import Dashboard from './views/Dashboard.vue';
 
 import RegisterDid from './views/RegisterDId.vue'
 
@@ -24,6 +22,11 @@ const router =  new Router({
     {
       path: '/explorer',
       redirect: '/explorer/login'
+    },
+    {
+      path: '/explorer/dashboard',
+      name: 'Dashboard',
+      component: Dashboard
     },
     {
       path: '/login',
@@ -49,16 +52,6 @@ const router =  new Router({
       path: '/register_pki',
       name: 'register_pki',
       component: Register_PKI
-    },
-    {
-      path: '/customers',
-      name: 'customers',
-      component: Customers
-    },
-    {
-      path: '/customerdetails/:id',
-      name: 'customerdetails',
-      component: CustomerDetails
     },
     {
       path: '/dashboard/home',

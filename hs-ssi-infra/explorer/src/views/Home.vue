@@ -133,21 +133,11 @@
 </template>
 
 <script>
-import Hash from "@/components/Hash.vue";
-import Asymmetric from "@/components/Asymmetric.vue";
-import Symmetric from "@/components/Symmetric.vue";
-import Introduction from "@/components/Introduction.vue";
-import ZKP from "@/components/zkp.vue";
 export default {
   name: "PanelPage",
   mounted() {
   },
   components: {
-    Hash,
-    Asymmetric,
-    Symmetric,
-    Introduction,
-    ZKP
   },
   data() {
     return {

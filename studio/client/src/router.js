@@ -3,8 +3,11 @@ import Router from 'vue-router'
 import PKIIdLogin from './views/PKIIdLogin.vue'
 import AppDetails from './views/AppDetails.vue'
 import IssueCredential from './views/IssueCredential.vue'
+import Credential from './views/Credential.vue'
 import Dashboard from './views/Dashboard.vue'
+import Profile from './views/Profile.vue'
 import fetch from 'node-fetch'
+import Schema from './views/Schema.vue'
 
 Vue.use(Router)
 
@@ -33,9 +36,33 @@ const router =  new Router({
       } 
     },
     {
+      path: '/studio/profile',
+      name: 'profile',
+      component: Profile,
+      meta: {
+        requiresAuth: true
+      } 
+    },
+    {
+      path: '/studio/schema',
+      name: 'schema',
+      component: Schema,
+      meta: {
+        requiresAuth: true
+      } 
+    },
+    {
       path: '/studio/apps/:appId',
       name: 'appdetails',
       component: AppDetails,
+      meta: {
+        requiresAuth: true
+      } 
+    },
+    {
+      path: '/studio/credential',
+      name: 'credential',
+      component: Credential,
       meta: {
         requiresAuth: true
       } 
