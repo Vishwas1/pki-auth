@@ -63,6 +63,10 @@
 {
 margin-left: 13%
 }
+.marginRight
+{
+margin-right: 12%
+}
 </style>
 
 
@@ -83,7 +87,7 @@ export default {
         },
         { 
           name: "Credentials",  
-          path: "/studio/credentials",
+          path: "/studio/credential",
           isShow: true,
         },
         { 
