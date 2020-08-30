@@ -122,9 +122,15 @@ export default {
     .catch(e => this.notifyErr(`Error: ${e.message}`))
   },
   mounted(){
-
+      this.clean();
   },
   methods: {
+    clean(){
+      localStorage.removeItem('authToken')
+      localStorage.removeItem('user')
+      localStorage.removeItem("credentials")
+      localStorage.removeItem("userData")
+    },
     notifySuccess(msg){
       this.$notify({
           group: 'foo',
@@ -196,6 +202,7 @@ export default {
         }
         reader.readAsText(file);
       } catch (e) {
+        this.clean();
         this.notifyErr(`Error: ${e.message}`);
       }
     },
@@ -249,6 +256,7 @@ export default {
           //window.location.href = redirect_uri; 
         });
      }catch(e){
+       this.clean();
        this.isLoading = false;
        this.notifyErr(`Error: ${e.message}`)
      }
