@@ -27,9 +27,10 @@ export default class DIDMethod implements IDID{
 
     create = async () => {
         const { keys, didDoc, did } = await getDidDocAndKeys({ name:  this.name})
+        didDoc['@context'].push("http://localhost:5000/api/did/resolve")
          
         this.did = did;
-        this.id = this.getId();
+        this.id = this.did//this.getId();
         this.didDoc = JSON.stringify(didDoc);
 
         // TODO: store credentials in db
@@ -44,6 +45,7 @@ export default class DIDMethod implements IDID{
     resolve = async (did: string) => {
         // TODO: fetch didDoc from db 
         let didInDb:IDID  = await this.dbSerice.getOne(SchemaType.Did, { did});
+        console.log(didInDb)
         return JSON.parse(didInDb.didDoc)
     }
 

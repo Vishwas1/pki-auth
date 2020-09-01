@@ -30,6 +30,21 @@ const resolve = async (req, res) => {
 }
 
 
+const raw = async (req, res) => {
+    try{
+        const  { did } = req.params
+        if(!did) throw new Error('Did is required!')
+        const didMethod = new DIDMethod();
+        console.log(did)
+        const raw = await didMethod.resolve(did);
+        res.status(200).json(raw)
+        // res.status(200).send({ status: 200, message: didDoc, error: null})
+    }catch(e){
+        res.status(500).send({ status: 500, message: null, error: e.message})
+    }
+}
+
+
 const list = async (req, res) => {
     try{
         const didMethod = new DIDMethod();
@@ -44,6 +59,7 @@ export default {
     create,
     update, 
     resolve,
-    list
+    list,
+    raw
 }
 

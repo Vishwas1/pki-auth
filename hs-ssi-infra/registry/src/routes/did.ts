@@ -10,7 +10,9 @@ router.get('/create', didCtrl.create)
 router.post('/update', didCtrl.update)
 
 // GET:  /api/did/resolve?did=
-router.get('/resolve', didCtrl.resolve)
+// router.get('/resolve', didCtrl.resolve)
+
+router.get('/resolve/:did', didCtrl.raw)
 
 router.get('/list', didCtrl.list)
 
