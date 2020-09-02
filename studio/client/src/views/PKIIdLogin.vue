@@ -69,14 +69,14 @@
                 type="button"
                 data-toggle="modal"
                 @click="login('PKI')"
-                class="btn btn-primary floatLeft"
+                class="btn btn-outline-primary btn-sm floatLeft"
               >Login</button>
-              <button
+              <!-- <button
                 type="button"
                 data-toggle="modal"
                 @click="downloadProof()"
                 class="btn btn-outline-primary floatLeft"
-              >View Proof</button>
+              >View Proof</button> -->
               Do not have account?
               <a href="http://localhost:5001/explorer/newdid" target="_blank">Create DID</a>
             </div>
