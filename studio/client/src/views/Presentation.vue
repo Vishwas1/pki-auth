@@ -39,16 +39,16 @@
       <div class="col-md-12" style="text-align: left">
         <div class="card">
           <div class="card-header">
-            <button class="btn">Generate Presentation</button>
+            <b-button v-b-toggle.collapse-1 variant="link">Generate Presentation</b-button>
           </div>
-          <!-- <b-collapse id="collapse-1" class="mt-2"> -->
+          <b-collapse id="collapse-1" class="mt-2">
             <div class="card-body">
               <div class="row">
                 <div class="col-md-6">
                   <form style="max-height:300px; min-height: 300px; overflow:auto; padding: 5px">
                     <div class="form-group">
                       <label class="floatLeft">Upload Verifiable Credential:</label>
-                      <input type="file" class="form-control" placeholder @change="onFileChange" />
+                      <input ref="vcFile" type="file" class="form-control" placeholder @change="onFileChange" />
                     </div>
                     <div class="form-group" v-for="attr in issueCredAttributes" :key="attr.name">
                       <label>{{attr.name}}</label>
@@ -65,7 +65,7 @@
                 </div>
                 <div class="col-md-6" style="padding: 30px" v-if="isCredentialIssued">
                   <div class="form-group" style="text-align:center">
-                    <qrcode-vue :value="signedVerifiableCredential" :size="200" level="H"></qrcode-vue>
+                    <qrcode-vue :value="signedVerifiablePresentation" :size="200" level="H"></qrcode-vue>
                     <label class="title">Scan the QR code using Hypersign Wallet to authenticate!</label>
                   </div>
                   <div class="form-group" style="text-align:center">
@@ -76,45 +76,66 @@
                 </div>
               </div>
             </div>
-          <!-- </b-collapse> -->
+          </b-collapse>
         </div>
       </div>
     </div>
-    <!-- <div class="row" style="margin-top: 2%;">
-      <div class="col-md-12">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>id</th>
-              <th>schemaId</th>
-              <th>issuer</th>
-              <th>subject</th>
-              <th>dataHash</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="row in vcList" :key="row">
-              <th scope="row">
-                <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" :id="row.id" />
-                  <label class="custom-control-label" :for="row.id">{{row.id}}</label>
+
+    <div class="row" style="margin-top:1%">
+      <div class="col-md-12" style="text-align: left">
+        <div class="card">
+          <div class="card-header">
+            <b-button v-b-toggle.collapse-2 variant="link">Verify Presentation</b-button>
+          </div>
+          <b-collapse id="collapse-2" class="mt-2">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <form style="max-height:300px; min-height: 300px; overflow:auto; padding: 5px">
+                    <div class="form-group">
+                      <label class="floatLeft">Upload Verifiable Presentation:</label>
+                      <input ref="vpFile" type="file" class="form-control" placeholder @change="onFileChange" />
+                    </div>
+                  </form>
+                  <div class="form-grop">
+                      <hr />
+                      <button class="btn btn-outline-primary btn-sm" @click="viewPresentation()">View</button>
+                      <button class="btn btn-outline-danger btn-sm" @click="clear()">Clear</button>
+                    </div>
                 </div>
-              </th>
-              <td>{{row.schemaId}}</td>
-              <td>{{row.issuer}}</td>
-              <td>{{row.subject}}</td>
-              <td>{{row.dataHash}}</td>
-            </tr>
-          </tbody>
-        </table>
+                <div class="col-md-6">
+                  <form style="max-height:300px; min-height: 300px; overflow:auto; padding: 5px">
+                  <!-- <div class="form-group" hidden>
+                    <ul class="list-group">
+                      <li class="list-group-item"><label><b>Issuer  DID:</b> {{presentationDetails.issuerDid}}</label></li>
+                      <li class="list-group-item"><label><b>Subject DID:</b> {{presentationDetails.holderDid}}</label></li>
+                      <li class="list-group-item"><label><b>Claim:</b> {{presentationDetails.claim}}</label></li>
+                      <li class="list-group-item"><label><b>Issuance Date:</b> {{presentationDetails.issuanceDate}}</label></li>
+                      <li class="list-group-item"><label><b>Expiration Date:</b> {{presentationDetails.expirationDate}}</label></li>
+                    </ul>
+                  </div> -->
+                  <div class="form-group">
+                    <label class="floatLeft">Presentation Details:</label> 
+                    <textarea class="form-control" v-model="presentationDetails" rows="10" cols="20"></textarea>
+                  </div>
+                  </form>
+                  <div class="form-grop">
+                      <hr />
+                      <button class="btn btn-outline-success btn-sm" @click="verifyPresentation()">Verify</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </b-collapse>
+        </div>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 
 <script>
 import fetch from "node-fetch";
-import { generateCredential, signCredential, generatePresentation, signPresentation } from "lds-sdk/dist/vc";
+import { generateCredential, signCredential, generatePresentation, signPresentation, verifyPresentation } from "lds-sdk/dist/vc";
 import QrcodeVue from "qrcode.vue";
 const { sha256hashStr } = require("../crypto-lib/symmetric");
 export default {
@@ -149,15 +170,13 @@ export default {
       fullPage: true,
       isLoading: false,
       holderDid: "did:hs:8b915133-cb8b-4151-9a63-1b91f702297f",
-      signedVerifiablePresentation: {}
+      signedVerifiablePresentation: {},
+      presentationDetails: ""
     };
   },
   created() {
     const usrStr = localStorage.getItem("user");
     this.user = JSON.parse(usrStr);
-    console.log(this.user)
-    this.getList('SCHEMA')
-    this.getList('CREDENTIAL')
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
@@ -180,43 +199,6 @@ export default {
           type: 'error',
           text: msg
         });
-    },
-    async getList(type) {
-      let url = "";
-      let options = {}
-      if(type === "SCHEMA"){
-        url = `http://localhost:5000/api/schema/list`;
-        options  = {
-          method: "GET"
-        }
-      }else{
-        url = `http://localhost:9000/api/credential/list`;
-        options  = {
-          method: "GET",
-          headers: {'x-auth-token': this.authToken}
-        }
-      }
-      
-      const resp = await fetch(url, options);
-      const j = await resp.json();
-      if (j && j.status == 500) {
-        return this.notifyErr(`Error:  ${j.error}`);
-      }
-      if(type === "SCHEMA"){
-        const schemaList = j.message
-        if(schemaList && schemaList.length > 0){
-          schemaList.forEach(s => {
-            if(s.owner != this.user.id) return
-            this.schemaMap[s.id] = JSON.parse(s.attributes)
-            this.selectOptions.push({
-              value: s.id,
-              text: `${s.credentialName} | ${s.id}`
-            })
-          });
-        }
-      }else{
-        this.vcList = j.message.list;
-      }
     },
     fetchData(url, option) {
       fetch(url)
@@ -274,37 +256,33 @@ export default {
         "vp.json"
       );
     },
-    onFileChange(event) {
-      try {
-        const file = event.target.files[0];
-        const reader = new FileReader();
-        reader.onload = readSuccess;
-        function readSuccess (evt) {
-          localStorage.removeItem('credential')
+    onfileLoadSuccess (evt){
+        console.log('Inside callbacl')
           const fileJSON = JSON.parse(evt.target.result);
-          if (!fileJSON) throw new Error("Incorrect file");
+          if (!fileJSON) this.notifyErr("Incorrect file");
           const typeArr = fileJSON["type"]
-          if(!typeArr.find(x => x == 'VerifiableCredential')){
-            throw new Error("Incorrect VC");
+          if(typeArr.find(x => x == 'VerifiableCredential')){
+            console.log('Inside callbacl: vc')
+            localStorage.removeItem('credential')
+            localStorage.setItem("credential", JSON.stringify(fileJSON));  
+          }else if(typeArr.find(x => x == 'VerifiablePresentation')){
+            console.log('Inside callbacl: vp')
+            localStorage.removeItem('presentation')
+            localStorage.setItem("presentation", JSON.stringify(fileJSON));  
+          }else{
+            this.notifyErr("Invalid file")
           }
-          localStorage.setItem("credential", JSON.stringify(fileJSON));
-        }
-        reader.readAsText(file);
-      } catch (e) {
-        this.clean();
-        this.notifyErr(`Error: ${e.message}`);
-      }
     },
-    generateAttributeMap() {
-      let attributesMap = [];
-      if (this.issueCredAttributes.length > 0) {
-        this.issueCredAttributes.forEach((e) => {
-          attributesMap[e.name] = e.value;
-        });
-      }
-      return attributesMap;
+    readFile(file, cb){
+      console.log('Inside reaffileDs')
+      const reader = new FileReader();
+      reader.onload = cb
+      reader.readAsText(file);
     },
-
+    onFileChange(event) {
+      const file = event.target.files[0];
+      this.readFile(file, this.onfileLoadSuccess)
+    },
     getCredentials(attributesMap) {
       const schemaUrl = `http://localhost:5000/api/schema/get/${this.selected}`;
       return generateCredential(schemaUrl, {
@@ -336,6 +314,56 @@ export default {
         this.isCredentialIssued = true;
         this.notifySuccess("Presentation generated and sigend")
         localStorage.removeItem('credential')
+      }catch(e){
+        this.isLoading = false
+        this.notifyErr(e.message)
+      }
+    },
+    viewPresentation(){
+      console.log('.......................................................')
+      const vp = JSON.parse(localStorage.getItem("presentation"));
+      if(!vp) this.notifyErr("VP is null")
+      console.log(vp)
+      const vc = vp.verifiableCredential[0]
+      this.presentationDetails = {}
+      this.presentationDetails.issuerDid = vc.issuer
+      this.presentationDetails.holderDid = vc.credentialSubject.id
+      this.presentationDetails.issuanceDate = vc.issuanceDate
+      this.presentationDetails.expirationDate = vc.expirationDate
+      this.presentationDetails.claim = JSON.stringify(vc.credentialSubject)
+      this.presentationDetails = JSON.stringify(this.presentationDetails, null, 2)
+      console.log(this.presentationDetails)
+    },
+    clear(){
+      this.presentationDetails = "",
+      localStorage.removeItem('presentation')
+      localStorage.removeItem('credential')
+      this.$refs.vpFile.value=null;
+      this.$refs.vcFile.value=null;
+      this.signedVerifiablePresentation = {}
+      this.isCredentialIssued =  false
+    },
+    async verifyPresentation() {  
+      this.isLoading = true
+      try{
+        const vp = JSON.parse(localStorage.getItem("presentation"));
+        if(!vp) throw new Error('vp is null')
+        const vc = vp.verifiableCredential[0]
+        const isVerified = await verifyPresentation(
+          {
+            presentation: vp, 
+            challenge: "test_challenge", 
+            issuerDid: vc.issuer, 
+            holderDid: vc.credentialSubject.id
+          });
+        console.log(isVerified)
+        if(isVerified.verified){
+          this.notifySuccess("Presentation verified")
+        }else{
+          this.notifyErr("Presentation can not verified")
+        }
+        this.isLoading = false
+        this.clear()
       }catch(e){
         this.isLoading = false
         this.notifyErr(e.message)
