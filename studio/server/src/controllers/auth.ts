@@ -75,10 +75,11 @@ const login = async (req: Request, res: Response) => {
                 // TODO:
                 //      verify the did   
                 //      Call http://localhost:5000/api/did/resolve?did=${id} to resolve the did
-                const res= await fetch(`http://localhost:5000/api/did/resolve?did=${id}`)
-                const j = await res.json()
+                // const res= await fetch(`http://localhost:5000/api/did/resolve/${id}`)
+                // const j = await res.json()
+                // Edit:  this check is not required cause, the sdk will take care of this.
                 //Check if the didDoc matches with the didDoc passed here if not throw error    
-                if(JSON.stringify(j.message) === JSON.stringify(proof)){
+                // if(JSON.stringify(j.message) === JSON.stringify(proof)){
                     const userObj = new User({...proof, username: proof['id'], id: proof['id'],fname: proof.name, publicKey: proof['publicKey'][0].id}) 
                     userData = {
                         id: userObj.id,
@@ -87,9 +88,9 @@ const login = async (req: Request, res: Response) => {
                         username: userObj.username,
                         email: userObj.email
                     }
-                }else{
-                    throw new Error("Invalid didDoc.")
-                }
+                // }else{
+                //     throw new Error("Invalid didDoc.")
+                // }
             }else{
                 logger.debug('Proof could not verified')
                 throw new Error("Unauthorized: Proof can not be verified!")
