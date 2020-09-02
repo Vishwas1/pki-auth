@@ -4,6 +4,7 @@ import PKIIdLogin from './views/PKIIdLogin.vue'
 import AppDetails from './views/AppDetails.vue'
 import IssueCredential from './views/IssueCredential.vue'
 import Credential from './views/Credential.vue'
+import Presentation from './views/Presentation.vue'
 import Dashboard from './views/Dashboard.vue'
 import Profile from './views/Profile.vue'
 import fetch from 'node-fetch'
@@ -63,6 +64,14 @@ const router =  new Router({
       path: '/studio/credential',
       name: 'credential',
       component: Credential,
+      meta: {
+        requiresAuth: true
+      } 
+    },
+    {
+      path: '/studio/presentation',
+      name: 'presentation',
+      component: Presentation,
       meta: {
         requiresAuth: true
       } 
