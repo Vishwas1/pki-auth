@@ -254,6 +254,7 @@ export default {
           console.log(j.message)
 
           localStorage.setItem("authToken", j.message.jwtToken);
+          j.message.user['privateKey'] = this.privateKey
           localStorage.setItem("user", JSON.stringify(j.message.user));
           if (localStorage.getItem("authToken") != null) {
             if (this.$route.params.nextUrl != null) {
