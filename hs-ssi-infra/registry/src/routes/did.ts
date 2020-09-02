@@ -10,7 +10,12 @@ router.get('/create', didCtrl.create)
 router.post('/update', didCtrl.update)
 
 // GET:  /api/did/resolve?did=
-// router.get('/resolve', didCtrl.resolve)
+
+router.get('/resolve', (req, res) => {
+    res.status(200).send({
+       network: "Hypersign Id Network"
+    })
+})
 
 router.get('/resolve/:did', didCtrl.raw)
 
