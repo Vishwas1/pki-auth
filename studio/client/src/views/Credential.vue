@@ -47,6 +47,9 @@
                 <div class="col-md-6">
                   <form style="max-height:300px; overflow:auto; padding: 5px">
                     <div class="form-group">
+                      <input type="text" class="form-control" placeholder="Issued To (did)" v-model="holderDid"/>
+                    </div>
+                    <div class="form-group">
                       <b-form-select
                         v-model="selected"
                         :options="selectOptions"
@@ -152,12 +155,14 @@ export default {
       vcList : [],
       schemaList: [],
       fullPage: true,
-      isLoading: false
+      isLoading: false,
+      holderDid: "did:hs:8b915133-cb8b-4151-9a63-1b91f702297f"
     };
   },
   created() {
     const usrStr = localStorage.getItem("user");
     this.user = JSON.parse(usrStr);
+    console.log(this.user)
     this.getList('SCHEMA')
     this.getList('CREDENTIAL')
   },
@@ -289,8 +294,8 @@ export default {
     getCredentials(attributesMap) {
       const schemaUrl = `http://localhost:5000/api/schema/get/${this.selected}`;
       return generateCredential(schemaUrl, {
-        subjectDid: this.subjectDid,
-        issuerDid: this.credentials.publicKey.id,
+        subjectDid: this.holderDid,
+        issuerDid: this.user.publicKey,
         expirationDate: new Date().toISOString(),
         attributesMap,
       }).then((signedCred) => {
@@ -299,7 +304,7 @@ export default {
     },
 
     signCredentials(credential) {
-      return signCredential(credential, this.credentials).then(
+      return signCredential(credential, this.user.publicKey, this.user.privateKey).then(
         (signedCredential) => {
           return signedCredential;
         }

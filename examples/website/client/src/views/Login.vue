@@ -55,7 +55,7 @@
         </div>
       </b-card>
     </div> -->
-    <!-- <div class="col-md-4">
+    <div class="col-md-4">
       <b-card no-body style="padding: 40px">
         <h2>PKI Authentication</h2>
         <hr />
@@ -68,17 +68,7 @@
             <hr />
             <h2>Or</h2>
             <div class="form-group">
-              <label class="floatLeft">Upload User Doc:</label>
-              <input
-                type="file"
-                class="form-control"
-                placeholder
-                @change="onFileChange"
-                accept="*.json"
-              />
-            </div>
-            <div class="form-group">
-              <label class="floatLeft">Upload Credentials:</label>
+              <label class="floatLeft">Upload Hypersign VC:</label>
               <input type="file" class="form-control" placeholder @change="onFileChange" />
             </div>
           </form>
@@ -96,20 +86,20 @@
             <button
               type="button"
               data-toggle="modal"
-              @click="login('PKI')"
+              @click="verifyVC()"
               class="btn btn-primary floatLeft"
             >Login</button>
           </div>
-          <div class="col-md-6 floatRight">
+          <!-- <div class="col-md-6 floatRight">
             Do not have account?
             <a href="/register_pki">SignUp</a>
-          </div>
+          </div> -->
         </div>
       </b-card>
-    </div> -->
+    </div>
 
 
-    <div class="col-md-4" style="margin-left: 30%;">
+    <!-- <div class="col-md-4" style="margin-left: 30%;">
       <b-card no-body style="padding: 40px">
         <h2>Login</h2>
         <hr />
@@ -124,7 +114,7 @@
           </div>
         </div>
       </b-card>
-    </div>
+    </div> -->
   </div>
   <!-- </div> -->
 </template>

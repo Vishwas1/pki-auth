@@ -72,19 +72,17 @@
               <table class="table table-bordered">
                 <thead>
                   <tr>
-                    <th>id</th>
-                    <th>name</th>
-                    <th>did</th>
-                    <th>didDoc</th>
+                    <th>DID</th>
+                    <th>Alias</th>
+                    <th>DID Document</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="row in didList" :key="row">
-                    <th scope="row">{{row.id}}</th>
+                    <td><a :href="'http://localhost:5000/api/did/resolve/'+row.did" target="_blank">{{row.did}}</a></td>
                     <td>{{row.name}}</td>
-                    <td>{{row.did}}</td>
                     <td
-                      style="word-wrap: break-word;min-width: 300px;max-width: 300px;"
+                      style="word-wrap: break-word;min-width: 700px;max-width: 700px;"
                     >{{row.didDoc}}</td>
                   </tr>
                 </tbody>
