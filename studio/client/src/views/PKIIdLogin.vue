@@ -42,7 +42,7 @@
             </div>
           </form>
           <form action="#" class="col-md-6" style="padding:6px">
-            <div class="form-group">
+            <div class="form-group" hidden>
               <label class="floatLeft">Upload DIDDoc:</label>
               <input
                 type="file"
@@ -52,9 +52,17 @@
                 accept="*.json"
               />
             </div>
-            <div class="form-group">
+            <div class="form-group" hidden>
               <label class="floatLeft">Upload Keys:</label>
               <input type="file" class="form-control" placeholder @change="onFileChange" />
+            </div>
+            <div class="form-group">
+              <label class="floatLeft">Enter privatekey:</label>
+              <input type="text" class="form-control" placeholder="Enter privatekey" v-model="privateKey"/>
+            </div>
+            <div class="form-group">
+              <label class="floatLeft">Enter Enter did or publickeyId:</label>
+              <input type="text" class="form-control" placeholder="Enter did or publickeyId" v-model="did"/>
             </div>
             <div class="form-group">
               <button
@@ -63,12 +71,12 @@
                 @click="login('PKI')"
                 class="btn btn-primary floatLeft"
               >Login</button>
-              <!-- <button
+              <button
                 type="button"
                 data-toggle="modal"
                 @click="downloadProof()"
                 class="btn btn-outline-primary floatLeft"
-              >View Proof</button> -->
+              >View Proof</button>
               Do not have account?
               <a href="http://localhost:5001/explorer/newdid" target="_blank">Create DID</a>
             </div>
@@ -105,7 +113,9 @@ export default {
       userData: {},
       proof: "",
       fullPage: true,
-      isLoading: false
+      isLoading: false,
+      privateKey: "61BJKDZDiYiXqTwWPapyx59XuqXpTiqTj8ZFqivbGAmXSfyGnxeUBMCTcmWXZPUBc3Y24iA3vjNSMebjmouFMjUc",
+      did: "did:hs:6af8fa78-ac40-4dd7-9ba0-b4641ef35545#z6MknoNTxEWCrhsJ29EZCzcbkBw9pjXqRLaCzBUoUKxr4Ktk",
     };
   },
   created(){
@@ -151,21 +161,22 @@ export default {
       this.$router.push(`${id}`);
     },
     async generateProof() {
-      this.credentials = JSON.parse(localStorage.getItem("credentials"));
-      console.log(this.credentials);
-      this.userData = JSON.parse(localStorage.getItem("userData"));
-      console.log(this.userData);
-      if((this.credentials && this.credentials['privateKeyBase58']) != null && (this.userData != null &&  this.userData['@context']) ){
+      console.log({did: this.did, pvkey:  this.privateKey})
+      // this.credentials = JSON.parse(localStorage.getItem("credentials"));
+      // console.log(this.credentials);
+      // this.userData = JSON.parse(localStorage.getItem("userData"));
+      // console.log(this.userData);
+      if(this.did != "" && this.privateKey !=""){
         const p = await sign({
-          doc: this.userData,
-          privateKeyBase58: this.credentials.privateKeyBase58,
-          publicKey: this.credentials.publicKey,
+          did: this.did,
+          privateKeyBase58: this.privateKey,
           challenge: this.challenge.challenge,
           domain: this.domain,
         });
+
         this.proof = JSON.stringify(p);
       } else {
-        throw new Error("Error: Both files are needed for generating proof");
+        throw new Error("Error: did and privatekey are requried");
       }
     },
     forceFileDownload(data, fileName) {
