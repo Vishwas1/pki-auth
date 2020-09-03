@@ -105,18 +105,25 @@
                 </div>
                 <div class="col-md-6">
                   <form style="max-height:300px; min-height: 300px; overflow:auto; padding: 5px">
-                  <!-- <div class="form-group" hidden>
+                  <div class="form-group">
                     <ul class="list-group">
                       <li class="list-group-item"><label><b>Issuer  DID:</b> {{presentationDetails.issuerDid}}</label></li>
                       <li class="list-group-item"><label><b>Subject DID:</b> {{presentationDetails.holderDid}}</label></li>
-                      <li class="list-group-item"><label><b>Claim:</b> {{presentationDetails.claim}}</label></li>
                       <li class="list-group-item"><label><b>Issuance Date:</b> {{presentationDetails.issuanceDate}}</label></li>
                       <li class="list-group-item"><label><b>Expiration Date:</b> {{presentationDetails.expirationDate}}</label></li>
+                      <li class="list-group-item"><b>Claims:</b><a  @click="showClaims()" v-if="presentationDetails.claim" style="color:blue; text-decoration:underline;padding-left:5px">View / Hide claims</a>
+                          <ul class="list-group" v-if="isClaims" style="padding-left:10%; padding-top:2%">
+                          <li class="list-group-item" v-for="(value, key) in presentationDetails.claim">
+                              <b>{{ key }}</b>: {{value}}
+                            </li>
+                          </ul> 
+                      </li>
+                       
                     </ul>
-                  </div> -->
-                  <div class="form-group">
+                  </div>
+                  <div class="form-group" hidden>
                     <label class="floatLeft">Presentation Details:</label> 
-                    <textarea class="form-control" v-model="presentationDetails" rows="10" cols="20"></textarea>
+                    <textarea class="form-control" v-model="presentationDetails" rows="10" cols="20" hidden></textarea>
                   </div>
                   </form>
                   <div class="form-grop">
@@ -171,7 +178,8 @@ export default {
       isLoading: false,
       holderDid: "did:hs:8b915133-cb8b-4151-9a63-1b91f702297f",
       signedVerifiablePresentation: {},
-      presentationDetails: ""
+      presentationDetails: {},
+      isClaims: false
     };
   },
   created() {
@@ -184,6 +192,10 @@ export default {
     });
   },
   methods: {
+    showClaims(){
+      if(this.isClaims) this.isClaims = false;
+      else this.isClaims = true;
+    },
     notifySuccess(msg){
       this.$notify({
           group: 'foo',
@@ -330,8 +342,9 @@ export default {
       this.presentationDetails.holderDid = vc.credentialSubject.id
       this.presentationDetails.issuanceDate = vc.issuanceDate
       this.presentationDetails.expirationDate = vc.expirationDate
-      this.presentationDetails.claim = JSON.stringify(vc.credentialSubject)
-      this.presentationDetails = JSON.stringify(this.presentationDetails, null, 2)
+      this.presentationDetails.claim = vc.credentialSubject
+      // this.presentationDetails.claim = JSON.stringify(vc.credentialSubject, null, 2)
+      // this.presentationDetails = JSON.stringify(this.presentationDetails, null, 2)
       console.log(this.presentationDetails)
     },
     clear(){
