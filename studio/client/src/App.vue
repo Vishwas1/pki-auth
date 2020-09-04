@@ -17,7 +17,7 @@
         >A portal for issuer to issue credentials on Hypersign Identity network!</h6>
         <hr style="opacity: 1.5" />
       </div>
-      <div class="col-md-9 rightAlign marginLeft">
+      <div class="col-md-9 rightAlign marginLeft" v-if="$router.history.current.name != 'PKIIdLogin'">
         <button @click="goToNextPage(m.name)" class="btn btn-link" v-for="m in menu" :key="m.name">{{m.name}}</button>
         <hr style="opacity: 1.5" />
       </div>

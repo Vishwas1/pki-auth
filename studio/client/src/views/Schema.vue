@@ -52,7 +52,6 @@ color: #888b8f;
   <div class="home marginLeft marginRight">
     <loading :active.sync="isLoading" 
         :can-cancel="true" 
-        :on-cancel="onCancel"
         :is-full-page="fullPage"></loading>
 
     <div class="row">
