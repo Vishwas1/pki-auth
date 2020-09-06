@@ -21,11 +21,19 @@
 .floatRight {
   float: right;
 }
+.marginLeft
+{
+margin-left: 13%
+}
+.marginRight
+{
+margin-right: 12%
+}
 </style>
 <template>
   <!-- <div class="home"> -->
   <div class="row">
-    <div class="col-md-8" style="margin-left: 17%;">
+    <div class="col-md-9 marginRight marginLeft">
       <div class="row">
         <div class="col-md-12">
           <div class="row">
@@ -58,8 +66,6 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <a href="/explorer/newdid" style="margin-left:55%" class="floatLeft">Get DID</a> 
-                <a href="http://localhost:9001/" target="_blank" class="floatRight">Studio</a>
               </div>
             </div>
           </div>

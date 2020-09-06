@@ -60,7 +60,7 @@
               <input type="text" class="form-control" placeholder="Enter privatekey" v-model="privateKey"/>
             </div>
             <div class="form-group">
-              <label class="floatLeft">Enter Enter did or publickeyId:</label>
+              <label class="floatLeft">Enter did or publickeyId:</label>
               <input type="text" class="form-control" placeholder="Enter did or publickeyId" v-model="did"/>
             </div>
             <div class="form-group">
